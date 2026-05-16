@@ -5,6 +5,26 @@
 
 const DEMO_USER = { email: 'admin@zidkenu.com', nombre: 'Alfredo García', rol: 'ADMIN' };
 
+// ── Módulo externo: asignar / reasignar empresa ─────────────────────────────
+// Cuando te pasen la ruta del otro módulo, pégala aquí (ej: '../asignacion/asignar_empresa.html')
+// Se enviará automáticamente ?id= con el ID de la empresa al hacer clic en el botón.
+const URL_MODULO_ASIGNAR_EMPRESA = '';
+
+function urlAsignarEmpresa(empresaId) {
+  if (!URL_MODULO_ASIGNAR_EMPRESA) return null;
+  const sep = URL_MODULO_ASIGNAR_EMPRESA.includes('?') ? '&' : '?';
+  return `${URL_MODULO_ASIGNAR_EMPRESA}${sep}id=${empresaId}`;
+}
+
+function irAsignarEmpresa(empresaId) {
+  const url = urlAsignarEmpresa(empresaId);
+  if (!url) {
+    toast('Módulo de asignación aún no configurado', 'info');
+    return;
+  }
+  window.location.href = url;
+}
+
 function zkGet(key) {
   try { return localStorage.getItem(key); } catch { return null; }
 }

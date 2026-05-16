@@ -10,7 +10,7 @@
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <a class="logo" href="listado_clientes.html">
+  <a class="logo" href="listado_empresa.html">
     <div class="logo-mark">Z</div>
     <div class="logo-text">Zidkenu <em>TaskFlow</em></div>
   </a>
@@ -25,11 +25,11 @@
 <div class="layout">
   <div class="sidebar">
     <div class="nav-section">Módulo Clientes</div>
-    <a class="nav-item" href="listado_clientes.html">
+    <a class="nav-item" href="listado_empresa.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
       Listado de clientes
     </a>
-    <a class="nav-item" href="nuevo_cliente.html">
+    <a class="nav-item" href="nueva_empresa.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Nuevo cliente
     </a>
@@ -45,7 +45,7 @@
     <div id="notFound" style="display:none">
       <div class="card">
         <div class="empty"><div class="empty-ico">❓</div><p>Cliente no encontrado</p></div>
-        <div style="text-align:center;margin-top:16px"><a class="btn btn-primary" href="listado_clientes.html">← Volver al listado</a></div>
+        <div style="text-align:center;margin-top:16px"><a class="btn btn-primary" href="listado_empresa.html">← Volver al listado</a></div>
       </div>
     </div>
 
@@ -188,7 +188,7 @@
 
         <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px">
           <a class="btn btn-ghost" id="btnDetalle" href="#">← Ver detalle</a>
-          <a class="btn btn-ghost" href="listado_clientes.html">Cancelar</a>
+          <a class="btn btn-ghost" href="listado_empresa.html">Cancelar</a>
           <button class="btn btn-primary" onclick="guardar()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Actualizar cliente
@@ -221,7 +221,7 @@ if (!empresa) {
   s('formWrap').style.display = 'block';
   s('pageTitle').textContent  = `Editando: ${empresa.razon}`;
   s('pageSub').textContent    = `Modifica los datos de "${empresa.razon}"`;
-  s('btnDetalle').href        = `detalle_cliente.html?id=${id}`;
+  s('btnDetalle').href        = `detalle_empresa.html?id=${id}`;
   cargarDatos();
 }
 
@@ -322,7 +322,7 @@ function guardar() {
   };
   saveEmpresas(lista);
   toast(`✅ "${razon}" actualizado correctamente`, 'ok');
-  setTimeout(() => { window.location.href = `detalle_cliente.html?id=${id}`; }, 1100);
+  setTimeout(() => { window.location.href = `detalle_empresa.html?id=${id}`; }, 1100);
 }
 </script>
 </body>

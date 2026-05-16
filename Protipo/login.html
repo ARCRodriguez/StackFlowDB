@@ -71,7 +71,7 @@ function doLogin(){
   if(!user){ err.style.display='block'; return; }
   err.style.display='none';
   try { localStorage.setItem('zk_user', JSON.stringify(user)); } catch {}
-  window.location.href = 'listado_clientes.html';
+  window.location.href = 'listado_empresa.html';
 }
 document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 </script>
