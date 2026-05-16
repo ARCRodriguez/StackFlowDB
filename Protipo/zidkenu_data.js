@@ -3,16 +3,32 @@
 // Guardar como: zidkenu_data.js
 // ============================================================
 
-// Verificar sesión
+const DEMO_USER = { email: 'admin@zidkenu.com', nombre: 'Alfredo García', rol: 'ADMIN' };
+
+function zkGet(key) {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+function zkSet(key, val) {
+  try { localStorage.setItem(key, val); } catch {}
+}
+function zkDel(key) {
+  try { localStorage.removeItem(key); } catch {}
+}
+
+// Verificar sesión (en archivo local entra directo sin login)
 function checkSession() {
-  const user = JSON.parse(sessionStorage.getItem('zk_user') || 'null');
+  let user = JSON.parse(zkGet('zk_user') || 'null');
+  if (!user && location.protocol === 'file:') {
+    user = DEMO_USER;
+    zkSet('zk_user', JSON.stringify(user));
+  }
   if (!user) { window.location.href = 'login.html'; return null; }
   return user;
 }
 
 // Logout
 function doLogout() {
-  sessionStorage.removeItem('zk_user');
+  zkDel('zk_user');
   window.location.href = 'login.html';
 }
 
@@ -33,26 +49,26 @@ const CUENTAS = [
 
 // Datos demo de empresas (guardadas en sessionStorage)
 const DEMO_EMPRESAS = [
-  { id: 1, razon: 'Textilería San Marcos S.A.C.',  ruc: '20601234567', tipo: 'JURIDICA', origen: 'OTRO_CONTADOR', regimen: 'MYPE',    uit: '1', contador: 'Rodrigo Flores',  estado: 'ACTIVO',     repNom: 'Carlos San Marcos', repDni: '12345678', repCargo: 'Gerente General', repTel: '999 111 222', repEmail: 'carlos@sanmarcos.com', obs: 'Cliente desde 2024' },
+  { id: 1, razon: 'Textilería San Marcos S.A.C.',  ruc: '20601234567', tipo: 'JURIDICA', origen: 'OTRO_CONTADOR', regimen: 'MYPE',    uit: '1', contador: 'Rodrigo Flores',  estado: 'ACTIVO',     repNom: 'Carlos San Marcos', repDni: '12345678', repCargo: 'Gerente General', repTel: '999 111 222', repEmail: 'carlos@sanmarcos.com', secNom: 'Patricia Vela Ríos', secDni: '11223344', secCargo: 'Representante legal ante SUNAT', secTel: '988 222 333', secEmail: 'patricia@sanmarcos.com', obs: 'Cliente desde 2024' },
   { id: 2, razon: 'Restaurante El Sabor E.I.R.L.', ruc: '20709876543', tipo: 'JURIDICA', origen: 'NUEVO',         regimen: null,      uit: '0', contador: 'María Torres',    estado: 'ACTIVO',     repNom: 'Ana Sabor Ríos',    repDni: '87654321', repCargo: 'Administradora',  repTel: '988 333 444', repEmail: 'ana@elsabor.com',       obs: '' },
   { id: 3, razon: 'Juan Pérez Quispe',              ruc: '10345678901', tipo: 'NATURAL',  origen: 'OTRO_CONTADOR', regimen: 'RUS',     uit: '0', contador: 'Rodrigo Flores',  estado: 'INACTIVO',   repNom: 'Juan Pérez Quispe', repDni: '34567890', repCargo: 'Titular',         repTel: '977 555 666', repEmail: 'juan@gmail.com',        obs: 'Pendiente regularización' },
   { id: 4, razon: 'Inversiones Andinas S.A.',       ruc: '20811112222', tipo: 'JURIDICA', origen: 'OTRO_CONTADOR', regimen: 'GENERAL', uit: '0', contador: 'Josue Mendoza',   estado: 'ACTIVO',     repNom: 'Marco Andino',      repDni: '55566677', repCargo: 'Presidente',      repTel: '944 777 888', repEmail: 'marco@inversiones.pe',  obs: '' },
   { id: 5, razon: 'Comercial Miraflores E.I.R.L.',  ruc: '20933334444', tipo: 'JURIDICA', origen: 'OTRO_CONTADOR', regimen: 'RER',     uit: '0', contador: 'María Torres',    estado: 'SUSPENDIDO', repNom: 'Luisa García',      repDni: '66677788', repCargo: 'Gerente',         repTel: '933 999 000', repEmail: 'luisa@miraflores.com',  obs: 'Deuda SUNAT pendiente' },
 ];
 
-// GET empresas desde sessionStorage
+// GET empresas desde localStorage
 function getEmpresas() {
-  const raw = sessionStorage.getItem('zk_empresas');
+  const raw = zkGet('zk_empresas');
   if (!raw) {
-    sessionStorage.setItem('zk_empresas', JSON.stringify(DEMO_EMPRESAS));
-    return DEMO_EMPRESAS;
+    zkSet('zk_empresas', JSON.stringify(DEMO_EMPRESAS));
+    return DEMO_EMPRESAS.map(e => ({ ...e }));
   }
   return JSON.parse(raw);
 }
 
 // SAVE empresas
 function saveEmpresas(lista) {
-  sessionStorage.setItem('zk_empresas', JSON.stringify(lista));
+  zkSet('zk_empresas', JSON.stringify(lista));
 }
 
 // Siguiente ID

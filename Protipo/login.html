@@ -70,7 +70,7 @@ function doLogin(){
   const err   = document.getElementById('errBox');
   if(!user){ err.style.display='block'; return; }
   err.style.display='none';
-  sessionStorage.setItem('zk_user', JSON.stringify(user));
+  try { localStorage.setItem('zk_user', JSON.stringify(user)); } catch {}
   window.location.href = 'listado_clientes.html';
 }
 document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });

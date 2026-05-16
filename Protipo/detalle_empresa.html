@@ -111,12 +111,23 @@
         </div>
       </div>
 
-      <!-- Sección asignación -->
-      <div class="card">
-        <div class="card-title">Asignación y observaciones</div>
+      <!-- Sección contacto secundario -->
+      <div class="card" id="secCard" style="display:none">
+        <div class="card-title">Contacto secundario</div>
         <div class="detail-grid" style="margin-top:14px">
-          <div class="di"><label>Contador responsable</label><span id="dContador">—</span></div>
-          <div class="di full" id="dObsWrap"><label>Observaciones</label><span id="dObs">—</span></div>
+          <div class="di"><label>Nombre</label><span id="dSecNom">—</span></div>
+          <div class="di"><label>DNI</label><span id="dSecDni" style="font-family:monospace">—</span></div>
+          <div class="di"><label>Cargo / relación</label><span id="dSecCargo">—</span></div>
+          <div class="di"><label>Teléfono</label><span id="dSecTel">—</span></div>
+          <div class="di full"><label>Correo</label><span id="dSecEmail">—</span></div>
+        </div>
+      </div>
+
+      <!-- Observaciones -->
+      <div class="card" id="obsCard" style="display:none">
+        <div class="card-title">Observaciones</div>
+        <div class="detail-grid" style="margin-top:14px">
+          <div class="di full"><span id="dObs">—</span></div>
         </div>
       </div>
     </div>
@@ -167,8 +178,15 @@ if (!e) {
   t('dRepNom', e.repNom); t('dRepDni', e.repDni); t('dRepCargo', e.repCargo);
   t('dRepTel', e.repTel); t('dRepEmail', e.repEmail);
 
-  // Asignación
-  t('dContador', e.contador); t('dObs', e.obs);
+  // Contacto secundario
+  if (e.secNom || e.secDni) {
+    s('secCard').style.display = '';
+    t('dSecNom', e.secNom); t('dSecDni', e.secDni); t('dSecCargo', e.secCargo);
+    t('dSecTel', e.secTel); t('dSecEmail', e.secEmail);
+  }
+
+  // Observaciones
+  if (e.obs) { s('obsCard').style.display = ''; t('dObs', e.obs); }
 }
 </script>
 </body>
