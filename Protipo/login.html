@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Zidkenu TaskFlow</title>
+<style>
+:root{--navy:#0A2041;--sky:#01ADF3;--mid:#013657;--silver:#C0C0C0;--border:#d0dce8;--danger:#dc3545;--text:#0A2041;--muted:#5a7a9a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,var(--mid) 60%,#015a8a 100%)}
+.card{background:#fff;border-radius:18px;padding:48px 44px;width:420px;max-width:95vw;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+.logo-wrap{text-align:center;margin-bottom:36px}
+.logo-mark{width:60px;height:60px;background:var(--navy);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 8px 24px rgba(1,173,243,.35)}
+.logo-mark span{font-size:30px;font-weight:900;color:var(--sky)}
+.brand{font-size:22px;font-weight:800;color:var(--navy)}
+.brand em{color:var(--sky);font-style:normal}
+.page-name{font-size:28px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:6px;margin-top:4px}
+.subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:32px}
+.err-box{background:#fee2e2;border-radius:8px;padding:11px 14px;font-size:13px;color:var(--danger);margin-bottom:18px;font-weight:600;display:none;border-left:4px solid var(--danger)}
+.fg{margin-bottom:18px}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.fg input{width:100%;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border);font-size:14px;color:var(--text);font-family:inherit;transition:.15s}
+.fg input:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 3px rgba(1,173,243,.12)}
+.btn-login{width:100%;padding:13px;background:var(--sky);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:.15s;letter-spacing:.3px;font-family:inherit}
+.btn-login:hover{background:#00a0df}
+.hint{text-align:center;font-size:11px;color:#bbb;margin-top:20px;line-height:1.6}
+.hint strong{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo-mark"><span>Z</span></div>
+    <div class="brand">Zidkenu <em>TaskFlow</em></div>
+  </div>
+
+  <p class="page-name">Login</p>
+  <p class="subtitle">Accede con tus credenciales corporativas</p>
+
+  <div class="err-box" id="errBox">❌ Correo o contraseña incorrectos</div>
+
+  <div class="fg">
+    <label>Correo electrónico</label>
+    <input type="email" id="lEmail" placeholder="usuario@zidkenu.com" value="admin@zidkenu.com"/>
+  </div>
+  <div class="fg">
+    <label>Contraseña</label>
+    <input type="password" id="lPass" placeholder="••••••••" value="admin123"/>
+  </div>
+  <button class="btn-login" onclick="doLogin()">Ingresar al sistema</button>
+
+  <p class="hint">
+    Demo: <strong>admin@zidkenu.com</strong> / <strong>admin123</strong><br>
+    También: diego · josue · rodrigo @zidkenu.com
+  </p>
+</div>
+
+<script>
+const CUENTAS = [
+  {email:'admin@zidkenu.com',   pass:'admin123', nombre:'Alfredo García', rol:'ADMIN'},
+  {email:'diego@zidkenu.com',   pass:'admin123', nombre:'Diego Ramos',    rol:'DIRECTOR_TI'},
+  {email:'josue@zidkenu.com',   pass:'admin123', nombre:'Josue Mendoza',  rol:'CONTADOR_SUPERVISOR'},
+  {email:'rodrigo@zidkenu.com', pass:'admin123', nombre:'Rodrigo Flores', rol:'CONTADOR'},
+];
+
+function doLogin(){
+  const email = document.getElementById('lEmail').value.trim();
+  const pass  = document.getElementById('lPass').value.trim();
+  const user  = CUENTAS.find(c => c.email === email && c.pass === pass);
+  const err   = document.getElementById('errBox');
+  if(!user){ err.style.display='block'; return; }
+  err.style.display='none';
+  sessionStorage.setItem('zk_user', JSON.stringify(user));
+  window.location.href = 'listado_clientes.html';
+}
+document.addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>

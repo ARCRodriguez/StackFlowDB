@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Listado de Clientes — Zidkenu TaskFlow</title>
+<link rel="stylesheet" href="zidkenu_style.css"/>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a class="logo" href="listado_clientes.html">
+    <div class="logo-mark">Z</div>
+    <div class="logo-text">Zidkenu <em>TaskFlow</em></div>
+  </a>
+  <div class="top-user">
+    <span class="top-badge" id="topRol">ADMIN</span>
+    <div class="avatar" id="topAv">A</div>
+    <span style="color:var(--silver);font-size:13px" id="topName">Usuario</span>
+    <button class="btn btn-ghost btn-sm" style="margin-left:8px;border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:11px" onclick="doLogout()">Salir</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section">Módulo Clientes</div>
+    <a class="nav-item active" href="listado_clientes.html" data-page="lista">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+      Listado de clientes
+    </a>
+    <a class="nav-item" href="nuevo_cliente.html" data-page="nuevo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Nuevo cliente
+    </a>
+    <div class="nav-section" style="margin-top:16px">Filtros rápidos</div>
+    <a class="nav-item" href="listado_clientes.html?estado=ACTIVO">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      Activos
+    </a>
+    <a class="nav-item" href="listado_clientes.html?estado=INACTIVO">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+      Inactivos
+    </a>
+    <a class="nav-item" href="listado_clientes.html?estado=SUSPENDIDO">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Suspendidos
+    </a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="ph">
+      <p class="page-name">Listado de Clientes</p>
+      <div class="ph-title"><div class="ph-bar"></div>Clientes / Empresas</div>
+      <div class="ph-sub">Cartera completa de empresas clientes de Zidkenu</div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-icon ki-sky">🏢</div><div><div class="kpi-val" id="kTotal">0</div><div class="kpi-lbl">Total clientes</div></div></div>
+      <div class="kpi"><div class="kpi-icon ki-green">✅</div><div><div class="kpi-val" id="kActivo">0</div><div class="kpi-lbl">Activos</div></div></div>
+      <div class="kpi"><div class="kpi-icon ki-warn">🔄</div><div><div class="kpi-val" id="kMigrado">0</div><div class="kpi-lbl">Migrados</div></div></div>
+      <div class="kpi"><div class="kpi-icon ki-red">⚠️</div><div><div class="kpi-val" id="kSusp">0</div><div class="kpi-lbl">Suspendidos</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Empresas registradas</div>
+        <div class="toolbar">
+          <div class="search">
+            <span class="search-ico">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+            </span>
+            <input type="text" id="searchQ" placeholder="Razón social o RUC..." oninput="renderTabla()"/>
+          </div>
+          <select class="fsel" id="fEstado" onchange="renderTabla()">
+            <option value="">Todos los estados</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="INACTIVO">Inactivo</option>
+            <option value="SUSPENDIDO">Suspendido</option>
+          </select>
+          <select class="fsel" id="fRegimen" onchange="renderTabla()">
+            <option value="">Todos los regímenes</option>
+            <option value="RUS">RUS</option>
+            <option value="RER">RER</option>
+            <option value="MYPE">MYPE</option>
+            <option value="GENERAL">Régimen General</option>
+          </select>
+          <a class="btn btn-primary" href="nuevo_cliente.html">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nuevo cliente
+          </a>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px">#</th>
+              <th>Razón social</th>
+              <th>RUC</th>
+              <th>Tipo persona</th>
+              <th>Origen</th>
+              <th>Régimen</th>
+              <th>Contador</th>
+              <th>Estado</th>
+              <th style="width:130px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pag">
+        <span class="pag-info" id="pagInfo"></span>
+        <button class="pag-btn" id="pagPrev" onclick="changePag(-1)">← Anterior</button>
+        <span id="pagNums"></span>
+        <button class="pag-btn" id="pagNext" onclick="changePag(1)">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CAMBIAR ESTADO -->
+<div class="overlay" id="ovEstado">
+  <div class="modal" style="width:400px">
+    <div class="modal-hd">
+      <h2>🔁 Cambiar estado</h2>
+      <button class="modal-close" onclick="closeM('ovEstado')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Empresa: <strong id="estNom"></strong></p>
+      <div class="fg">
+        <label>Nuevo estado</label>
+        <select id="nuevoEstado">
+          <option value="ACTIVO">Activo</option>
+          <option value="INACTIVO">Inactivo</option>
+          <option value="SUSPENDIDO">Suspendido</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeM('ovEstado')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarEstado()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REASIGNAR -->
+<div class="overlay" id="ovReas">
+  <div class="modal" style="width:420px">
+    <div class="modal-hd">
+      <h2>🔄 Reasignar contador</h2>
+      <button class="modal-close" onclick="closeM('ovReas')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Empresa: <strong id="reasNom"></strong></p>
+      <div class="fg">
+        <label>Nuevo contador</label>
+        <select id="reasContador">
+          <option value="Rodrigo Flores">Rodrigo Flores</option>
+          <option value="María Torres">María Torres</option>
+          <option value="Josue Mendoza">Josue Mendoza (Supervisor)</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Motivo (opcional)</label>
+        <textarea id="reasMot" style="min-height:56px" placeholder="Motivo del cambio..."></textarea>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeM('ovReas')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarReas()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ELIMINAR -->
+<div class="overlay" id="ovDel">
+  <div class="confirm-box">
+    <div class="ico">🗑️</div>
+    <h3>¿Eliminar este cliente?</h3>
+    <p>La empresa <strong id="delNom"></strong> será eliminada permanentemente.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" onclick="closeM('ovDel')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarDel()">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="zidkenu_data.js"></script>
+<script>
+const PAGE_SIZE = 8;
+let pagCur = 1, estId = null, reasId = null, delId = null;
+const s = id => document.getElementById(id);
+const v = id => s(id)?.value?.trim() || '';
+
+// Init
+const user = checkSession();
+renderTopbar(user);
+
+// Leer filtro de URL si viene de sidebar
+const params = new URLSearchParams(location.search);
+if (params.get('estado')) { s('fEstado').value = params.get('estado'); }
+
+updateKPIs(); renderTabla();
+
+function updateKPIs() {
+  const lista = getEmpresas();
+  s('kTotal').textContent   = lista.length;
+  s('kActivo').textContent  = lista.filter(e => e.estado === 'ACTIVO').length;
+  s('kMigrado').textContent = lista.filter(e => e.origen === 'OTRO_CONTADOR').length;
+  s('kSusp').textContent    = lista.filter(e => e.estado === 'SUSPENDIDO').length;
+}
+
+function filtrados() {
+  const q   = v('searchQ').toLowerCase();
+  const est = v('fEstado');
+  const reg = v('fRegimen');
+  return getEmpresas().filter(e => {
+    const mq  = !q   || e.razon.toLowerCase().includes(q) || e.ruc.includes(q);
+    const me  = !est || e.estado === est;
+    const mr  = !reg || e.regimen === reg;
+    return mq && me && mr;
+  });
+}
+
+function renderTabla() {
+  const lista = filtrados();
+  const total = lista.length;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (pagCur > pages) pagCur = 1;
+  const start = (pagCur - 1) * PAGE_SIZE, end = Math.min(start + PAGE_SIZE, total);
+  const page  = lista.slice(start, end);
+
+  const tb = s('tbody');
+  if (!page.length) {
+    tb.innerHTML = `<tr><td colspan="9"><div class="empty"><div class="empty-ico">🔍</div><p>Sin resultados</p><small>Cambia los filtros o registra un nuevo cliente</small></div></td></tr>`;
+  } else {
+    tb.innerHTML = page.map((e, i) => {
+      const reg = e.origen === 'NUEVO'
+        ? `<span class="badge b-nuevo">Nueva</span>`
+        : (e.regimen ? `<span class="badge ${BADGE_REG[e.regimen] || ''}">${e.regimen}</span>` : '—');
+      return `<tr>
+        <td style="color:var(--muted);font-weight:600">${start + i + 1}</td>
+        <td class="td-name">${e.razon}</td>
+        <td class="td-ruc">${e.ruc}</td>
+        <td><span class="badge ${e.tipo === 'NATURAL' ? 'b-natural' : 'b-juridica'}">${e.tipo}</span></td>
+        <td><span class="badge ${e.origen === 'NUEVO' ? 'b-nuevo' : 'b-migrado'}">${e.origen === 'NUEVO' ? 'Nuevo' : 'Migrado'}</span></td>
+        <td>${reg}</td>
+        <td style="font-size:12px;color:var(--muted)">${e.contador || '—'}</td>
+        <td><span class="badge ${BADGE_EST[e.estado] || 'b-inactivo'}">${e.estado}</span></td>
+        <td class="td-actions">
+          <a class="btn-icon" title="Ver detalle" href="detalle_cliente.html?id=${e.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>
+          </a>
+          <a class="btn-icon" title="Editar" href="editar_cliente.html?id=${e.id}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </a>
+          <button class="btn-icon" title="Reasignar contador" onclick="abrirReas(${e.id})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </button>
+          <button class="btn-icon" title="Cambiar estado" onclick="abrirEst(${e.id})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </button>
+          <button class="btn-icon del" title="Eliminar" onclick="abrirDel(${e.id})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+          </button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  s('pagInfo').textContent = `Mostrando ${total ? start + 1 : 0}–${end} de ${total}`;
+  s('pagPrev').disabled = pagCur === 1;
+  s('pagNext').disabled = pagCur >= pages;
+  let nums = '';
+  for (let i = 1; i <= pages; i++) nums += `<button class="pag-btn${i === pagCur ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  s('pagNums').innerHTML = nums;
+}
+
+function changePag(d) { pagCur += d; renderTabla(); }
+function goPage(n)     { pagCur = n;  renderTabla(); }
+
+// Estado
+function abrirEst(id) {
+  estId = id;
+  const e = getEmpresas().find(x => x.id === id);
+  s('estNom').textContent   = e.razon;
+  s('nuevoEstado').value    = e.estado;
+  s('ovEstado').classList.add('open');
+}
+function confirmarEstado() {
+  const lista = getEmpresas();
+  const e = lista.find(x => x.id === estId);
+  e.estado = v('nuevoEstado');
+  saveEmpresas(lista);
+  closeM('ovEstado');
+  toast(`✅ Estado de "${e.razon}" → ${e.estado}`, 'ok');
+  updateKPIs(); renderTabla();
+}
+
+// Reasignar
+function abrirReas(id) {
+  reasId = id;
+  const e = getEmpresas().find(x => x.id === id);
+  s('reasNom').textContent = e.razon;
+  s('reasContador').value  = e.contador || '';
+  s('reasMot').value = '';
+  s('ovReas').classList.add('open');
+}
+function confirmarReas() {
+  const lista = getEmpresas();
+  const e = lista.find(x => x.id === reasId);
+  e.contador = v('reasContador');
+  saveEmpresas(lista);
+  closeM('ovReas');
+  toast(`🔄 Contador de "${e.razon}" → ${e.contador}`, 'ok');
+  renderTabla();
+}
+
+// Eliminar
+function abrirDel(id) {
+  delId = id;
+  s('delNom').textContent = getEmpresas().find(x => x.id === id)?.razon || '';
+  s('ovDel').classList.add('open');
+}
+function confirmarDel() {
+  const lista = getEmpresas();
+  const nom   = lista.find(x => x.id === delId)?.razon;
+  saveEmpresas(lista.filter(x => x.id !== delId));
+  closeM('ovDel');
+  toast(`🗑 "${nom}" eliminado`, 'info');
+  updateKPIs(); renderTabla();
+}
+
+function closeM(id) { s(id).classList.remove('open'); }
+</script>
+</body>
+</html>
