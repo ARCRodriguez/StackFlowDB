@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zidkenu — Iniciar Sesión</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<<<<<<< HEAD
 <style>
   :root {
     --navy: #1d1656;
@@ -335,11 +336,33 @@
       <div class="feature-item"><div class="feature-dot"></div>Seguimiento de tareas contables en tiempo real</div>
       <div class="feature-item"><div class="feature-dot"></div>Gestión de empresas, planillas y AFP</div>
       <div class="feature-item"><div class="feature-dot"></div>Panel ejecutivo con métricas de cumplimiento</div>
+=======
+<link rel="stylesheet" href="zidkenu_style.css">
+</head>
+<body class="zk-login">
+
+<div class="left-panel">
+  <div class="grid-overlay"></div>
+  <div class="left-content">
+    <div class="login-logo-wrap">
+      <img src="Zidkenulogo.png" alt="Zidkenu" class="login-logo-img">
+    </div>
+    <div class="mv-block">
+      <h3>Misión</h3>
+      <p>Proveer soluciones empresariales confiables que impulsen el éxito de nuestros clientes, con un servicio ético, transparente y personalizado, basado en relaciones de confianza y crecimiento conjunto.</p>
+    </div>
+    <div class="mv-block">
+      <h3>Visión</h3>
+      <p>Ser líderes nacionales en servicios contables y empresariales, reconocidos por nuestra solidez, innovación, y expansión, brindando soluciones de alta calidad que se adaptan a los cambios normativos y tecnológicos para asegurar el éxito de nuestros clientes.</p>
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     </div>
   </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Right Panel -->
+=======
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
 <div class="right-panel">
   <div class="login-box">
     <div class="login-header">
@@ -373,6 +396,7 @@
       <div class="spinner" id="spinner"></div>
     </button>
 
+<<<<<<< HEAD
     <div class="error-msg" id="errorMsg">
       ❌ Correo o contraseña incorrectos. Intenta nuevamente.
     </div>
@@ -381,16 +405,47 @@
       Sistema de Control de Accesos — Zidkenu
       <br>
       <span class="version-badge">v1.1.0 • 2025</span>
+=======
+    <div class="error-msg" id="errorMsg">Correo o contraseña incorrectos. Intenta nuevamente.</div>
+
+    <div class="login-footer">
+      Sistema de Control de Accesos — Zidkenu
+      <br><span class="version-badge">v1.1.0 • 2025</span>
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     </div>
   </div>
 </div>
 
 <script>
+<<<<<<< HEAD
 // ─── CONFIGURACIÓN ───
 const API_URL = 'api.php';
 
 async function handleLogin() {
   const email     = document.getElementById('email').value.trim();
+=======
+const USUARIOS_SEED = [
+  { id: 1, nombre: "Carlos Quispe",  correo: "usuario@zidkenu.com",    password: "1234",     rol: "usuario",       activo: true },
+  { id: 2, nombre: "Ana Condori",    correo: "contador@zidkenu.com",   password: "1234",     rol: "contador",      activo: true },
+  { id: 3, nombre: "María Torres",   correo: "supervisor@zidkenu.com", password: "1234",     rol: "supervisor",    activo: true },
+  { id: 4, nombre: "Roberto Díaz",   correo: "directivo@zidkenu.com",  password: "1234",     rol: "directivo",     activo: true },
+  { id: 5, nombre: "Admin Zidkenu",  correo: "admin@zidkenu.com",      password: "admin123", rol: "administrador", activo: true },
+  { id: 6, nombre: "Lucía Mamani",   correo: "lucia@zidkenu.com",      password: "1234",     rol: "contador",      activo: true },
+  { id: 7, nombre: "Jorge Paredes",  correo: "jorge@zidkenu.com",      password: "1234",     rol: "usuario",       activo: true },
+];
+
+function getUsuarios() {
+  const raw = localStorage.getItem('zidkenu_usuarios');
+  if (!raw) {
+    localStorage.setItem('zidkenu_usuarios', JSON.stringify(USUARIOS_SEED));
+    return USUARIOS_SEED.slice();
+  }
+  return JSON.parse(raw);
+}
+
+function handleLogin() {
+  const correo    = document.getElementById('email').value.trim();
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   const password  = document.getElementById('password').value.trim();
   const errorMsg  = document.getElementById('errorMsg');
   const loginText = document.getElementById('loginText');
@@ -399,13 +454,19 @@ async function handleLogin() {
 
   errorMsg.style.display = 'none';
 
+<<<<<<< HEAD
   if (!email || !password) {
     errorMsg.textContent = '⚠️ Por favor completa todos los campos.';
+=======
+  if (!correo || !password) {
+    errorMsg.textContent   = 'Por favor completa todos los campos.';
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     errorMsg.style.display = 'block';
     return;
   }
 
   loginText.style.display = 'none';
+<<<<<<< HEAD
   spinner.style.display = 'block';
   loginBtn.disabled = true;
 
@@ -449,5 +510,30 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') handleLogin();
 });
 </script>
+=======
+  spinner.style.display   = 'block';
+  loginBtn.disabled       = true;
+
+  setTimeout(() => {
+    const usuario = getUsuarios().find(u => u.correo === correo && u.password === password && u.activo);
+
+    if (usuario) {
+      const { password: _, ...sesion } = usuario;
+      sessionStorage.setItem('zidkenu_user', JSON.stringify(sesion));
+      window.location.href = 'dashboard.html';
+    } else {
+      errorMsg.textContent   = 'Correo o contraseña incorrectos. Intenta nuevamente.';
+      errorMsg.style.display = 'block';
+      spinner.style.display   = 'none';
+      loginText.style.display = 'block';
+      loginBtn.disabled       = false;
+    }
+  }, 500);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
+<button type="button" class="btn-feedback">Feedback</button>
+>>>>>>> 57ec434602913ac555b78b2edf440470775d4323
 </body>
 </html>
