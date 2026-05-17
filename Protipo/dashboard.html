@@ -4,500 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zidkenu — Dashboard</title>
-<<<<<<< HEAD
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #1d1656;
-    --blue-dark: #004aad;
-    --blue-main: #0041ff;
-    --blue-light: #289dd2;
-    --white: #ffffff;
-    --gray-50: #f8faff;
-    --gray-100: #eef2ff;
-    --gray-200: #dde4f5;
-    --gray-300: #c3cfe8;
-    --gray-500: #8896b3;
-    --gray-700: #4a5578;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --green: #059669;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Sora', sans-serif;
-    background: var(--gray-50);
-    min-height: 100vh;
-  }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    position: fixed;
-    top: 0; left: 0;
-    width: 260px;
-    height: 100vh;
-    background: linear-gradient(175deg, var(--navy) 0%, #0d0e3f 100%);
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  }
-
-  .sidebar-brand {
-    padding: 28px 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo-mark {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--blue-main), var(--blue-light));
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .logo-mark svg { width: 22px; height: 22px; }
-
-  .brand-text {
-    font-size: 1.25rem; font-weight: 800;
-    color: var(--white);
-    letter-spacing: -0.3px;
-  }
-  .brand-text span { color: var(--blue-light); }
-
-  .sidebar-user-info {
-    padding: 20px 24px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .user-avatar {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    color: white;
-  }
-
-  .user-name-side {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-
-  .role-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .sidebar-nav {
-    flex: 1;
-    padding: 16px 12px;
-    overflow-y: auto;
-  }
-
-  .nav-section-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.35);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0 12px;
-    margin: 16px 0 8px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    color: rgba(255,255,255,0.65);
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 2px;
-    text-decoration: none;
-  }
-
-  .nav-item:hover {
-    background: rgba(255,255,255,0.08);
-    color: white;
-  }
-
-  .nav-item.active {
-    background: linear-gradient(135deg, var(--blue-dark), var(--blue-main));
-    color: white;
-    box-shadow: 0 4px 12px rgba(0,65,255,0.35);
-  }
-
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-  .sidebar-footer {
-    padding: 16px 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 11px 14px;
-    border-radius: 10px;
-    background: rgba(239,68,68,0.12);
-    color: #fc8181;
-    border: none;
-    font-family: 'Sora', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .logout-btn:hover { background: rgba(239,68,68,0.25); color: #feb2b2; }
-  .logout-btn svg { width: 18px; height: 18px; }
-
-  /* ── MAIN CONTENT ── */
-  .main-content {
-    margin-left: 260px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ── TOPBAR ── */
-  .topbar {
-    background: var(--white);
-    border-bottom: 1px solid var(--gray-200);
-    padding: 0 36px;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-  }
-
-  .topbar-left h1 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--navy);
-  }
-
-  .topbar-left p {
-    font-size: 0.8rem;
-    color: var(--gray-500);
-    margin-top: 2px;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .topbar-date {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--gray-500);
-    background: var(--gray-100);
-    padding: 6px 12px;
-    border-radius: 8px;
-  }
-
-  /* ── PAGE CONTENT ── */
-  .page-content {
-    flex: 1;
-    padding: 36px;
-  }
-
-  /* Welcome Banner */
-  .welcome-banner {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-dark) 60%, var(--blue-light) 100%);
-    border-radius: 20px;
-    padding: 32px 36px;
-    margin-bottom: 36px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .welcome-banner::before {
-    content: '';
-    position: absolute;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    right: -80px; top: -80px;
-  }
-
-  .welcome-banner::after {
-    content: '';
-    position: absolute;
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    background: rgba(40,157,210,0.15);
-    right: 80px; bottom: -80px;
-  }
-
-  .welcome-role-line {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--blue-light);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .welcome-role-line::before {
-    content: '';
-    display: inline-block;
-    width: 24px;
-    height: 2px;
-    background: var(--blue-light);
-    border-radius: 2px;
-  }
-
-  .welcome-name {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--white);
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .welcome-subtitle {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    font-weight: 400;
-    max-width: 500px;
-    line-height: 1.6;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* ── STATS ROW ── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 18px;
-    margin-bottom: 36px;
-  }
-
-  .stat-card {
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 16px;
-    padding: 20px 22px;
-    transition: all 0.25s;
-  }
-
-  .stat-card:hover {
-    border-color: var(--blue-main);
-    box-shadow: 0 4px 20px rgba(0,65,255,0.1);
-    transform: translateY(-2px);
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    color: var(--gray-500);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-  }
-
-  .stat-value {
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: var(--navy);
-    font-family: 'DM Mono', monospace;
-  }
-
-  .stat-change {
-    font-size: 0.78rem;
-    margin-top: 4px;
-    font-weight: 500;
-  }
-
-  .stat-change.up { color: var(--success); }
-  .stat-change.neutral { color: var(--gray-500); }
-
-  /* ── MODULE CARDS ── */
-  .section-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--gray-200);
-  }
-
-  .modules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    justify-items: center;
-    margin-bottom: 36px;
-  }
-
-  .module-card {
-    background: var(--white);
-    border: 2px solid var(--gray-200);
-    border-radius: 20px;
-    padding: 32px 28px;
-    width: 100%;
-    max-width: 300px;
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    text-decoration: none;
-    display: block;
-  }
-
-  .module-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 4px;
-    background: linear-gradient(90deg, var(--blue-dark), var(--blue-light));
-    transform: scaleX(0);
-    transition: transform 0.3s;
-  }
-
-  .module-card:hover {
-    border-color: var(--blue-main);
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0,65,255,0.15);
-  }
-
-  .module-card:hover::before { transform: scaleX(1); }
-
-  .module-icon-wrap {
-    width: 68px; height: 68px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 18px;
-    transition: transform 0.3s;
-  }
-
-  .module-card:hover .module-icon-wrap { transform: scale(1.1) rotate(-5deg); }
-  .module-icon-wrap svg { width: 32px; height: 32px; }
-
-  .module-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-
-  .module-desc {
-    font-size: 0.82rem;
-    color: var(--gray-500);
-    line-height: 1.6;
-    margin-bottom: 18px;
-  }
-
-  .module-access-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .access-full     { background: rgba(0,74,173,0.1);  color: var(--blue-dark); }
-  .access-validacion { background: rgba(245,158,11,0.1); color: #d97706; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--navy);
-    color: white;
-    padding: 14px 20px;
-    border-radius: 12px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    z-index: 300;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    animation: slideToast 0.3s ease;
-  }
-
-  @keyframes slideToast {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  /* ── LOADING SKELETON ── */
-  .skeleton {
-    background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 8px;
-  }
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-</style>
-</head>
-<body>
-
-<!-- SIDEBAR -->
-=======
 <link rel="stylesheet" href="zidkenu_style.css">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 </head>
 <body class="zk-app">
 
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <div class="logo-mark">
@@ -507,22 +19,12 @@
     </div>
     <span class="brand-text">Zid<span>kenu</span></span>
   </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   <div class="sidebar-user-info">
     <div class="user-avatar" id="sidebarAvatar"></div>
     <div class="user-name-side" id="sidebarName">—</div>
     <span class="role-badge" id="sidebarRoleBadge">—</span>
   </div>
-<<<<<<< HEAD
-
   <nav class="sidebar-nav" id="sidebarNav"></nav>
-
-=======
-  <nav class="sidebar-nav" id="sidebarNav"></nav>
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   <div class="sidebar-footer">
     <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -533,14 +35,8 @@
   </div>
 </nav>
 
-<<<<<<< HEAD
-<!-- MAIN CONTENT -->
-<main class="main-content">
-  <div class="topbar">
-=======
 <main class="main-content">
   <div class="app-topbar">
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     <div class="topbar-left">
       <h1 id="pageTitle">Dashboard</h1>
       <p id="pageSubtitle">Vista general del sistema</p>
@@ -559,21 +55,12 @@
 
     <div class="stats-row" id="statsRow"></div>
 
-<<<<<<< HEAD
-    <div class="section-title">Módulos disponibles</div>
-=======
     <div class="section-title" id="modulesTitle">Módulos disponibles</div>
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     <div class="modules-grid" id="modulesGrid"></div>
   </div>
 </main>
 
-<<<<<<< HEAD
-<!-- TOAST -->
-<div class="toast" id="toast">
-=======
 <div class="toast-app" id="toast">
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
   </svg>
@@ -581,28 +68,6 @@
 </div>
 
 <script>
-<<<<<<< HEAD
-// ─── CONFIG ───
-const API_URL = 'api.php';
-
-// SVG Icons
-const homeIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
-const taskIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`;
-const buildingIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`;
-const usersIcon    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`;
-
-// Etiquetas de roles alineadas al diccionario
-// BD: ADMIN, DIRECTOR_TI, CONTADOR — en la sesión se usa la clave de display del rol
-const rolLabels = {
-  usuario:       "👤 Usuario",
-  contador:      "🧾 Contador",
-  supervisor:    "🔍 Supervisor",
-  directivo:     "📊 Directivo",
-  administrador: "⚙️ Administrador"
-};
-
-// ─── CONFIGURACIÓN POR ROL ───
-=======
 // ═══════════════════════════════════════════════════════
 //  DATOS PREDEFINIDOS (sin base de datos)
 //  Alineados al diccionario de variables del sistema
@@ -727,33 +192,10 @@ const rolLabels = {
 // ═══════════════════════════════════════════════════════
 //  CONFIG POR ROL
 // ═══════════════════════════════════════════════════════
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
 const rolConfig = {
 
   // ── USUARIO ──
   usuario: {
-<<<<<<< HEAD
-    gradientAvatar: "linear-gradient(135deg,#289dd2,#0041ff)",
-    badgeBg: "rgba(40,157,210,0.18)", badgeColor: "#289dd2",
-    welcomeRol: "Portal de Usuario",
-    subtitle: "Accede a tus tareas asignadas y lleva el seguimiento de tu trabajo diario.",
-    statsKeys: ['pendientes', 'completadas', 'en_progreso'],
-    statsLabels: ['Tareas pendientes', 'Completadas', 'En progreso'],
-    modules: [
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#004aad,#0041ff)",
-        title: "Módulo de Tareas",
-        desc: "Visualiza, gestiona y registra el avance de las tareas asignadas por tu supervisor.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_tareas.html"
-      }
-    ],
-    nav: () => [
-      { label: "Dashboard", icon: homeIcon, active: true, href: '#' },
-      { section: "Mis módulos" },
-      { label: "Mis Tareas", icon: taskIcon, href: 'modulo_tareas.html' }
-=======
     gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
     badgeBg: "rgba(1,173,243,0.18)", badgeColor: "#01ADF3",
     welcomeRol: "Portal de Usuario",
@@ -774,34 +216,11 @@ const rolConfig = {
       { label:"Dashboard",  icon:homeIcon, active:true, href:'#' },
       { section:"Mis módulos" },
       { label:"Mis Tareas", icon:taskIcon, href:'mis_tareas.html' },
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     ]
   },
 
   // ── CONTADOR ──
   contador: {
-<<<<<<< HEAD
-    gradientAvatar: "linear-gradient(135deg,#059669,#0041ff)",
-    badgeBg: "rgba(5,150,105,0.15)", badgeColor: "#059669",
-    welcomeRol: "Portal de Contador",
-    subtitle: "Accede a tus tareas contables asignadas, registra avances y gestiona las obligaciones de tus empresas.",
-    statsKeys: ['pendientes', 'completadas', 'en_progreso'],
-    statsLabels: ['Tareas pendientes', 'Completadas', 'En progreso'],
-    modules: [
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#059669,#0041ff)",
-        title: "Módulo de Tareas",
-        desc: "Gestiona y actualiza el estado de tus tareas contables: planillas, AFP, PDT y más.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_tareas.html"
-      }
-    ],
-    nav: () => [
-      { label: "Dashboard", icon: homeIcon, active: true, href: '#' },
-      { section: "Mis módulos" },
-      { label: "Mis Tareas", icon: taskIcon, href: 'modulo_tareas.html' }
-=======
     gradientAvatar: "linear-gradient(135deg,#059669,#01ADF3)",
     badgeBg: "rgba(5,150,105,0.15)", badgeColor: "#059669",
     welcomeRol: "Portal de Contador",
@@ -823,34 +242,11 @@ const rolConfig = {
       { label:"Dashboard",  icon:homeIcon, active:true, href:'#' },
       { section:"Mis módulos" },
       { label:"Mis Tareas", icon:taskIcon, href:'mis_tareas.html' },
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     ]
   },
 
   // ── SUPERVISOR ──
   supervisor: {
-<<<<<<< HEAD
-    gradientAvatar: "linear-gradient(135deg,#004aad,#0041ff)",
-    badgeBg: "rgba(0,65,255,0.15)", badgeColor: "#0041ff",
-    welcomeRol: "Portal de Supervisor",
-    subtitle: "Supervisa el avance de tareas de tu equipo y valida los registros de cumplimiento contable.",
-    statsKeys: ['pendientes', 'completadas', 'en_progreso'],
-    statsLabels: ['Tareas pendientes', 'Completadas equipo', 'En progreso'],
-    modules: [
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#1d1656,#004aad)",
-        title: "Módulo de Tareas",
-        desc: "Revisa el avance de tareas de tu equipo y valida los registros de cumplimiento.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_tareas.html"
-      }
-    ],
-    nav: () => [
-      { label: "Dashboard", icon: homeIcon, active: true, href: '#' },
-      { section: "Módulos" },
-      { label: "Módulo de Tareas", icon: taskIcon, href: 'modulo_tareas.html' }
-=======
     gradientAvatar: "linear-gradient(135deg,#013657,#01ADF3)",
     badgeBg: "rgba(1,173,243,0.15)", badgeColor: "#01ADF3",
     welcomeRol: "Portal de Supervisor",
@@ -877,45 +273,10 @@ const rolConfig = {
       { section:"Módulos" },
       { label:"Vista General Tareas", icon:taskIcon,  href:'vista_admin.html' },
       { label:"Tareas en Validación", icon:checkIcon, href:'vista_supervisor.html' },
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     ]
   },
 
   // ── DIRECTIVO ──
-<<<<<<< HEAD
-  // El directivo asigna empresas a contadores y sus tareas → acceso completo a empresas.
-  // En tareas su rol es validar y aprobar → etiqueta "Tareas en Validación".
-  directivo: {
-    gradientAvatar: "linear-gradient(135deg,#1d1656,#004aad)",
-    badgeBg: "rgba(29,22,86,0.12)", badgeColor: "#1d1656",
-    welcomeRol: "Portal Directivo",
-    subtitle: "Gestiona la cartera de empresas, asigna contadores y supervisa el estado de cumplimiento de todas las tareas.",
-    statsKeys: ['total_empresas', 'total_usuarios', 'tareas_completadas', 'cumplimiento'],
-    statsLabels: ['Total empresas', 'Usuarios activos', 'Tareas completadas', 'Cumplimiento global'],
-    modules: [
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#004aad,#1d1656)",
-        title: "Módulo de Empresas",
-        desc: "Gestiona la cartera de empresas, asigna contadores y crea las tareas correspondientes por empresa.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_empresas.html"
-      },
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#289dd2,#0041ff)",
-        title: "Módulo de Tareas",
-        desc: "Revisa, aprueba o rechaza las tareas entregadas por los contadores de cada empresa.",
-        access: "Tareas en Validación", type: "validacion",
-        href: "modulo_tareas.html"
-      }
-    ],
-    nav: () => [
-      { label: "Dashboard", icon: homeIcon, active: true, href: '#' },
-      { section: "Módulos" },
-      { label: "Módulo de Empresas", icon: buildingIcon, href: 'modulo_empresas.html' },
-      { label: "Módulo de Tareas",   icon: taskIcon,     href: 'modulo_tareas.html'   }
-=======
   directivo: {
     gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
     badgeBg: "rgba(255,255,255,0.15)", badgeColor: "#ffffff",
@@ -953,53 +314,11 @@ const rolConfig = {
       { label:"Vista General Tareas", icon:taskIcon,     href:'vista_admin.html' },
       { label:"Tareas en Validación", icon:checkIcon,    href:'vista_directivo.html' },
       { label:"Dashboard BI",         icon:chartIcon,    href:'dashboard_bi.html' },
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     ]
   },
 
   // ── ADMINISTRADOR ──
   administrador: {
-<<<<<<< HEAD
-    gradientAvatar: "linear-gradient(135deg,#0041ff,#289dd2)",
-    badgeBg: "rgba(0,65,255,0.15)", badgeColor: "#004aad",
-    welcomeRol: "Panel Administrador",
-    subtitle: "Tienes acceso total al sistema: visualiza, gestiona y modifica todos los módulos y usuarios.",
-    statsKeys: ['total_usuarios', 'total_empresas', 'modulos_activos', 'cumplimiento'],
-    statsLabels: ['Total usuarios', 'Empresas', 'Módulos activos', 'Cumplimiento'],
-    modules: [
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#289dd2,#0041ff)",
-        title: "Módulo de Tareas",
-        desc: "Gestión completa de tareas: crear, asignar, modificar y eliminar en todo el sistema.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_tareas.html"
-      },
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
-        iconBg: "linear-gradient(135deg,#004aad,#1d1656)",
-        title: "Módulo de Empresas",
-        desc: "Control total de empresas: crear, asignar contadores y gestionar la cartera completa.",
-        access: "Acceso completo", type: "full",
-        href: "modulo_empresas.html"
-      },
-      {
-        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
-        iconBg: "linear-gradient(135deg,#1d1656,#004aad)",
-        title: "Gestión de Usuarios",
-        desc: "Crea cuentas, asigna roles, modifica datos y gestiona todos los usuarios del sistema.",
-        access: "Acceso completo", type: "full",
-        href: "admin_usuarios.html"
-      }
-    ],
-    nav: () => [
-      { label: "Dashboard", icon: homeIcon, active: true, href: '#' },
-      { section: "Módulos del sistema" },
-      { label: "Módulo de Tareas",   icon: taskIcon,     href: 'modulo_tareas.html'   },
-      { label: "Módulo de Empresas", icon: buildingIcon, href: 'modulo_empresas.html' },
-      { section: "Administración" },
-      { label: "Gestión de Usuarios", icon: usersIcon, href: 'admin_usuarios.html' }
-=======
     gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
     badgeBg: "rgba(255,255,255,0.15)", badgeColor: "#ffffff",
     welcomeRol: "Panel Administrador",
@@ -1048,24 +367,16 @@ const rolConfig = {
       { label:"Gestión de Usuarios",    icon:usersIcon,    href:'admin_usuarios.html' },
       { section:"Analítica" },
       { label:"Dashboard BI",           icon:chartIcon,    href:'dashboard_bi.html' },
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     ]
   }
 };
 
-<<<<<<< HEAD
-// ─── INIT ───
-let currentUser = null;
-
-document.addEventListener('DOMContentLoaded', async () => {
-=======
 // ═══════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   const stored = sessionStorage.getItem('zidkenu_user');
   if (!stored) { window.location.href = 'login.html'; return; }
   currentUser = JSON.parse(stored);
@@ -1079,11 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setDate();
   buildSidebar(currentUser);
   buildWelcome(currentUser);
-<<<<<<< HEAD
-  await loadStats(currentUser);
-=======
   buildStats(currentUser);
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   buildModules(currentUser);
 });
 
@@ -1097,28 +404,11 @@ function buildSidebar(user) {
   const cfg = rolConfig[user.rol];
   const initials = user.nombre.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
   const av = document.getElementById('sidebarAvatar');
-<<<<<<< HEAD
-  av.textContent = initials;
-=======
   av.textContent  = initials;
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   av.style.background = cfg.gradientAvatar;
 
   document.getElementById('sidebarName').textContent = user.nombre;
   const rb = document.getElementById('sidebarRoleBadge');
-<<<<<<< HEAD
-  rb.textContent = rolLabels[user.rol] || user.rol;
-  rb.style.background = cfg.badgeBg;
-  rb.style.color = cfg.badgeColor;
-
-  const navItems = cfg.nav(user.rol);
-  document.getElementById('sidebarNav').innerHTML = navItems.map(item => {
-    if (item.section) return `<div class="nav-section-label">${item.section}</div>`;
-    return `<a class="nav-item ${item.active ? 'active' : ''}" href="${item.href}">
-      ${item.icon}
-      ${item.label}
-    </a>`;
-=======
   rb.textContent   = rolLabels[user.rol] || user.rol;
   rb.style.background = cfg.badgeBg;
   rb.style.color      = cfg.badgeColor;
@@ -1128,84 +418,11 @@ function buildSidebar(user) {
   document.getElementById('sidebarNav').innerHTML = navItems.map(item => {
     if (item.section) return `<div class="nav-section-label">${item.section}</div>`;
     return `<a class="nav-item ${item.active ? 'active' : ''}" href="${item.href}">${item.icon}${item.label}</a>`;
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   }).join('');
 }
 
 function buildWelcome(user) {
   const cfg = rolConfig[user.rol];
-<<<<<<< HEAD
-  document.getElementById('welcomeRoleLine').textContent = cfg.welcomeRol;
-  document.getElementById('welcomeName').textContent = `Bienvenido, ${user.nombre.split(' ')[0]}`;
-  document.getElementById('welcomeSubtitle').textContent = cfg.subtitle;
-  document.getElementById('pageTitle').textContent = cfg.welcomeRol;
-  document.getElementById('pageSubtitle').textContent = `Sesión activa · ${rolLabels[user.rol]}`;
-}
-
-async function loadStats(user) {
-  const cfg = rolConfig[user.rol];
-  const statsRow = document.getElementById('statsRow');
-
-  statsRow.innerHTML = cfg.statsKeys.map(() => `
-    <div class="stat-card">
-      <div class="skeleton" style="height:14px;width:60%;margin-bottom:10px"></div>
-      <div class="skeleton" style="height:36px;width:50%;margin-bottom:6px"></div>
-      <div class="skeleton" style="height:12px;width:70%"></div>
-    </div>
-  `).join('');
-
-  try {
-    let stats = {};
-    const isUserRole = ['usuario', 'contador', 'supervisor'].includes(user.rol);
-    let endpoint = `${API_URL}?action=stats`;
-    if (isUserRole && user.id) {
-      endpoint = `${API_URL}?action=stats_usuario&usuario_id=${user.id}`;
-    }
-
-    const res = await fetch(endpoint);
-    if (res.ok) {
-      stats = await res.json();
-    }
-
-    renderStats(cfg, stats);
-  } catch (e) {
-    renderStats(cfg, {
-      pendientes: '—', completadas: '—', en_progreso: '—',
-      total_usuarios: '—', total_empresas: '—', modulos_activos: 2,
-      tareas_completadas: '—', cumplimiento: '—'
-    });
-  }
-}
-
-function renderStats(cfg, stats) {
-  const statsRow = document.getElementById('statsRow');
-  const suffixes = { cumplimiento: '%' };
-
-  statsRow.innerHTML = cfg.statsKeys.map((key, i) => {
-    const val = stats[key] !== undefined ? stats[key] : '—';
-    const suffix = suffixes[key] || '';
-    const isUp = key === 'tareas_completadas' || key === 'cumplimiento';
-    return `
-      <div class="stat-card">
-        <div class="stat-label">${cfg.statsLabels[i]}</div>
-        <div class="stat-value">${val}${val !== '—' && suffix ? suffix : ''}</div>
-        <div class="stat-change ${isUp ? 'up' : 'neutral'}">${isUp ? '↑ Al día' : 'Actual'}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-function buildModules(user) {
-  const cfg = rolConfig[user.rol];
-  const grid = document.getElementById('modulesGrid');
-  grid.innerHTML = cfg.modules.map(m => {
-    let labelClass = 'access-full';
-    let labelIcon  = '✅';
-    if (m.type === 'validacion') {
-      labelClass = 'access-validacion';
-      labelIcon  = '🔍';
-    }
-=======
   document.getElementById('welcomeRoleLine').textContent  = cfg.welcomeRol;
   document.getElementById('welcomeName').textContent      = `Bienvenido, ${user.nombre.split(' ')[0]}`;
   document.getElementById('welcomeSubtitle').textContent  = cfg.subtitle;
@@ -1259,22 +476,13 @@ function buildModules(user) {
 
   grid.innerHTML = cfg.modules.map(m => {
     const t = typeMap[m.type] || typeMap.full;
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
     return `
       <a class="module-card" href="${m.href}">
         <div class="module-icon-wrap" style="background:${m.iconBg}">${m.icon}</div>
         <div class="module-title">${m.title}</div>
         <div class="module-desc">${m.desc}</div>
-<<<<<<< HEAD
-        <span class="module-access-label ${labelClass}">
-          ${labelIcon} ${m.access}
-        </span>
-      </a>
-    `;
-=======
         <span class="module-access-label ${t.cls}">${t.icon} ${m.access}</span>
       </a>`;
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
   }).join('');
 }
 
@@ -1292,9 +500,6 @@ function logout() {
   }
 }
 </script>
-<<<<<<< HEAD
-=======
 <button type="button" class="btn-feedback">Feedback</button>
->>>>>>> 57ec434602913ac555b78b2edf440470775d4323
 </body>
 </html>
