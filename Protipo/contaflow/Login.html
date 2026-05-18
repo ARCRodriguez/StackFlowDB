@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContaFlow — Ingreso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #1d1656;
+    --blue1:  #004aad;
+    --blue2:  #0041ff;
+    --cyan:   #289dd2;
+    --white:  #ffffff;
+    --gray50: #f8f9fc;
+    --gray100:#eef1f7;
+    --gray300:#c4cad8;
+    --gray500:#7a84a0;
+    --gray700:#3d4460;
+    --text:   #1a1f36;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(29,22,86,.10);
+    --shadow-lg: 0 12px 48px rgba(29,22,86,.16);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--gray50);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── background decorativo ── */
+  .bg-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: .12;
+    pointer-events: none;
+  }
+  .bg-shape-1 {
+    width: 600px; height: 600px;
+    background: var(--blue2);
+    top: -200px; left: -200px;
+  }
+  .bg-shape-2 {
+    width: 400px; height: 400px;
+    background: var(--cyan);
+    bottom: -150px; right: -100px;
+  }
+  .bg-shape-3 {
+    width: 300px; height: 300px;
+    background: var(--navy);
+    top: 40%; left: 60%;
+  }
+
+  /* ── grid layout ── */
+  .login-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: min(900px, 96vw);
+    min-height: 540px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── panel izquierdo (marca) ── */
+  .brand-panel {
+    background: linear-gradient(145deg, var(--navy) 0%, var(--blue1) 60%, var(--blue2) 100%);
+    padding: 52px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-panel::before {
+    content:'';
+    position:absolute;
+    width:320px; height:320px;
+    border-radius:50%;
+    border: 60px solid rgba(255,255,255,.06);
+    bottom: -80px; right: -80px;
+  }
+  .brand-panel::after {
+    content:'';
+    position:absolute;
+    width:180px; height:180px;
+    border-radius:50%;
+    border: 40px solid rgba(255,255,255,.05);
+    top: -40px; right: 60px;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .brand-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.3px;
+  }
+  .brand-name span { color: var(--cyan); }
+
+  .brand-body { position: relative; z-index: 1; }
+  .brand-tagline {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    letter-spacing: -.4px;
+  }
+  .brand-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,.65);
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  .brand-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative; z-index: 1;
+  }
+  .pill {
+    padding: 5px 13px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.1);
+    font-size: 12px;
+    color: rgba(255,255,255,.8);
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,.15);
+  }
+
+  /* ── panel derecho (form) ── */
+  .form-panel {
+    background: var(--white);
+    padding: 52px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.4px;
+    margin-bottom: 6px;
+  }
+  .form-sub {
+    font-size: 14px;
+    color: var(--gray500);
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray700);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 8px;
+  }
+
+  .input-wrap { position: relative; }
+  .input-wrap .icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray300);
+    font-size: 16px;
+    pointer-events: none;
+    transition: color .2s;
+  }
+  .input-wrap select,
+  .input-wrap input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1.5px solid var(--gray100);
+    border-radius: var(--radius);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--gray50);
+    outline: none;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .input-wrap select:focus,
+  .input-wrap input:focus {
+    border-color: var(--blue1);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(0,74,173,.08);
+  }
+  .input-wrap select:focus ~ .icon,
+  .input-wrap input:focus ~ .icon { color: var(--blue1); }
+  .input-wrap select option { background: #fff; }
+
+  /* flecha select */
+  .select-arrow {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--gray300);
+    font-size: 12px;
+  }
+
+  /* rol badge preview */
+  .rol-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: all .3s;
+  }
+  .rol-badge.show { display: flex; }
+  .rol-badge.admin     { background:#eef3ff; color:var(--blue1); }
+  .rol-badge.directivo { background:#e8f0fe; color:#1a56db; }
+  .rol-badge.supervisor{ background:#e8f8f5; color:#0d9488; }
+  .rol-badge.contador  { background:#f0f4ff; color:var(--navy); }
+  .rol-dot { width:8px; height:8px; border-radius:50%; background:currentColor; }
+
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--blue1), var(--blue2));
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .2px;
+    transition: opacity .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,65,255,.25);
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-login::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background: rgba(255,255,255,0);
+    transition: background .2s;
+  }
+  .btn-login:hover { box-shadow: 0 6px 24px rgba(0,65,255,.35); transform: translateY(-1px); }
+  .btn-login:hover::after { background: rgba(255,255,255,.06); }
+  .btn-login:active { transform: scale(.98); }
+
+  .login-error {
+    background: #fff1f0;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #dc2626;
+    margin-top: 14px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .login-error.show { display: flex; }
+
+  .demo-hint {
+    margin-top: 24px;
+    padding: 14px;
+    background: var(--gray50);
+    border-radius: 10px;
+    border: 1px solid var(--gray100);
+  }
+  .demo-hint-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--gray500);
+    margin-bottom: 10px;
+  }
+  .demo-rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .demo-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--gray700);
+  }
+  .demo-badge {
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  .db-admin     { background:#eef3ff; color:var(--blue1); }
+  .db-directivo { background:#e8f0fe; color:#1a56db; }
+  .db-supervisor{ background:#e8f8f5; color:#0d9488; }
+  .db-contador  { background:#f0f4ff; color:var(--navy); }
+
+  @media (max-width:640px) {
+    .login-wrapper { grid-template-columns:1fr; }
+    .brand-panel { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shape bg-shape-1"></div>
+<div class="bg-shape bg-shape-2"></div>
+<div class="bg-shape bg-shape-3"></div>
+
+<div class="login-wrapper">
+
+  <!-- Panel marca -->
+  <div class="brand-panel">
+    <div class="brand-logo">
+      <div class="brand-icon">📊</div>
+      <div class="brand-name">Conta<span>Flow</span></div>
+    </div>
+
+    <div class="brand-body">
+      <div class="brand-tagline">Gestión contable clara y eficiente</div>
+      <div class="brand-desc">
+        Plataforma de asignación y seguimiento de tareas contables para empresas que brindan servicios a múltiples clientes.
+      </div>
+    </div>
+
+    <div class="brand-pills">
+      <span class="pill">Multiempresa</span>
+      <span class="pill">Trazabilidad</span>
+      <span class="pill">Control de avance</span>
+      <span class="pill">Validación supervisada</span>
+    </div>
+  </div>
+
+  <!-- Panel form -->
+  <div class="form-panel">
+    <div class="form-title">Bienvenido</div>
+    <div class="form-sub">Ingresa con tu cuenta para continuar.</div>
+
+    <div class="field">
+      <label>Usuario</label>
+      <div class="input-wrap">
+        <span class="icon">👤</span>
+        <select id="sel-usuario" onchange="onUsuarioChange()">
+          <option value="">— Selecciona tu usuario —</option>
+          <optgroup label="Administradores">
+            <option value="Admin1|admin">Admin1</option>
+            <option value="Admin2|admin">Admin2</option>
+          </optgroup>
+          <optgroup label="Directivos">
+            <option value="Directivo1|directivo">Directivo1</option>
+          </optgroup>
+          <optgroup label="Supervisores">
+            <option value="Supervisor1|supervisor">Supervisor1</option>
+          </optgroup>
+          <optgroup label="Contadores">
+            <option value="Contador1|contador">Contador1</option>
+            <option value="Contador2|contador">Contador2</option>
+            <option value="Contador3|contador">Contador3</option>
+          </optgroup>
+        </select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <div class="rol-badge" id="rol-badge">
+        <span class="rol-dot"></span>
+        <span id="rol-label"></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Contraseña</label>
+      <div class="input-wrap">
+        <span class="icon">🔒</span>
+        <input type="password" id="inp-pass" placeholder="••••••"
+               onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">Ingresar al sistema</button>
+
+    <div class="login-error" id="login-error">
+      <span>⚠</span>
+      <span id="error-msg">Contraseña incorrecta.</span>
+    </div>
+
+    <!-- Demo hint -->
+    <div class="demo-hint">
+      <div class="demo-hint-title">Accesos de demostración</div>
+      <div class="demo-rows">
+        <div class="demo-row"><span class="demo-badge db-admin">Admin</span> Admin1 / Admin2 → <b>1234</b></div>
+        <div class="demo-row"><span class="demo-badge db-directivo">Directivo</span> Directivo1 → <b>1234</b></div>
+        <div class="demo-row"><span class="demo-badge db-supervisor">Supervisor</span> Supervisor1 → <b>1234</b></div>
+        <div class="demo-row"><span class="demo-badge db-contador">Contador</span> Contador1-3 → <b>123</b></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="db.js"></script>
+<script>
+const ROL_LABELS = {
+  admin:      'Administrador — acceso completo',
+  directivo:  'Directivo — acceso completo',
+  supervisor: 'Supervisor — verificación y validación',
+  contador:   'Contador — gestión de tareas asignadas',
+};
+const ROL_DESTINO = {
+  admin:      'vista_admin.html',
+  directivo:  'vista_directivo.html',
+  supervisor: 'vista_supervisor.html',
+  contador:   'mis_tareas.html',
+};
+
+function onUsuarioChange() {
+  const val = document.getElementById('sel-usuario').value;
+  const badge = document.getElementById('rol-badge');
+  const lbl   = document.getElementById('rol-label');
+  if (!val) { badge.className = 'rol-badge'; return; }
+  const rol = val.split('|')[1];
+  lbl.textContent = ROL_LABELS[rol] || rol;
+  badge.className = 'rol-badge show ' + rol;
+  document.getElementById('login-error').classList.remove('show');
+}
+
+function doLogin() {
+  const val  = document.getElementById('sel-usuario').value;
+  const pass = document.getElementById('inp-pass').value;
+  const errEl = document.getElementById('login-error');
+  const msgEl = document.getElementById('error-msg');
+
+  if (!val)  { msgEl.textContent='Selecciona un usuario.'; errEl.classList.add('show'); return; }
+  if (!pass) { msgEl.textContent='Ingresa tu contraseña.'; errEl.classList.add('show'); return; }
+
+  const [nombre] = val.split('|');
+  const usuario = DB.login(nombre, pass);
+
+  if (!usuario) {
+    msgEl.textContent = 'Contraseña incorrecta. Verifica e intenta de nuevo.';
+    errEl.classList.add('show');
+    document.getElementById('inp-pass').value = '';
+    return;
+  }
+
+  errEl.classList.remove('show');
+  DB.setSession(usuario);
+  window.location.href = ROL_DESTINO[usuario.rol] || 'login.html';
+}
+</script>
+</body>
+</html>

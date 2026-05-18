@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContaFlow — Vista General</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1d1656; --blue1:#004aad; --blue2:#0041ff; --cyan:#289dd2;
+  --white:#ffffff; --gray50:#f8f9fc; --gray100:#eef1f7; --gray200:#dce2f0;
+  --gray300:#c4cad8; --gray500:#7a84a0; --gray700:#3d4460; --text:#1a1f36;
+  --radius:10px; --radius-lg:14px;
+  --shadow:0 2px 12px rgba(29,22,86,.08);
+  --shadow-md:0 4px 20px rgba(29,22,86,.12);
+  --shadow-lg:0 8px 40px rgba(29,22,86,.18);
+  --c-asignado:#004aad;
+  --c-proceso:#7c3aed;
+  --c-validacion:#eab308;
+  --c-completado:#16a34a;
+  --c-porvencer:#f97316;
+  --c-vencido:#dc2626;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Roboto',sans-serif;background:var(--gray50);color:var(--text);min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--gray100);height:60px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  position:sticky;top:0;z-index:300;box-shadow:var(--shadow);}
+.topbar-left{display:flex;align-items:center;gap:16px;}
+.topbar-logo{font-size:19px;font-weight:700;color:var(--navy);}
+.topbar-logo span{color:var(--cyan);}
+.topbar-sep{width:1px;height:24px;background:var(--gray200);}
+.topbar-page{font-size:14px;font-weight:500;color:var(--gray700);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.user-chip{display:flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;
+  background:var(--gray50);border:1px solid var(--gray100);font-size:13px;font-weight:500;color:var(--gray700);}
+.udot{width:9px;height:9px;border-radius:50%;}
+.udot-admin    {background:var(--blue1);}
+.udot-directivo{background:#1a56db;}
+.udot-supervisor{background:#0d9488;}
+.btn-nav{padding:7px 16px;border-radius:var(--radius);border:1px solid var(--gray200);
+  background:var(--white);color:var(--gray700);font-family:'Roboto',sans-serif;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;}
+.btn-nav:hover{border-color:var(--blue1);color:var(--blue1);}
+.btn-nav.primary{background:linear-gradient(135deg,var(--blue1),var(--blue2));
+  color:#fff;border:none;box-shadow:0 3px 10px rgba(0,65,255,.2);}
+.btn-nav.primary:hover{opacity:.92;color:#fff;}
+.btn-logout{padding:7px 16px;border-radius:var(--radius);border:none;
+  background:var(--gray50);color:var(--gray500);font-family:'Roboto',sans-serif;
+  font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-logout:hover{background:#fff1f0;color:#dc2626;}
+
+.content{padding:28px;}
+.page-header{margin-bottom:22px;}
+.page-title{font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.3px;}
+.page-sub{font-size:14px;color:var(--gray500);margin-top:4px;}
+
+/* LEGEND — más grande */
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:22px;align-items:center;
+  padding:14px 18px;background:var(--white);border-radius:var(--radius);
+  border:1px solid var(--gray100);box-shadow:var(--shadow);}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:14px;
+  font-weight:500;color:var(--gray700);}
+.sdot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.sdot.asignado    {background:var(--c-asignado);  box-shadow:0 0 6px var(--c-asignado);}
+.sdot.en_proceso  {background:var(--c-proceso);   box-shadow:0 0 6px var(--c-proceso);}
+.sdot.en_validacion{background:var(--c-validacion);box-shadow:0 0 6px var(--c-validacion);}
+.sdot.completado  {background:var(--c-completado);box-shadow:0 0 6px var(--c-completado);}
+.legend-box{width:22px;height:22px;border-radius:5px;flex-shrink:0;}
+.legend-box.por_vencer{background:rgba(249,115,22,.15);border:2px solid var(--c-porvencer);}
+.legend-box.vencido   {background:rgba(220,38,38,.12);border:2px solid var(--c-vencido);}
+.legend-img{width:20px;height:20px;object-fit:contain;flex-shrink:0;}
+
+/* FILTERS */
+.filter-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px;}
+.filter-bar select{padding:9px 14px;border:1.5px solid var(--gray200);border-radius:var(--radius);
+  font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);background:var(--white);
+  outline:none;transition:border-color .2s;appearance:none;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a84a0'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;}
+.filter-bar select:focus{border-color:var(--blue1);}
+.filter-label{font-size:13px;color:var(--gray500);font-weight:500;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:var(--radius-lg);
+  border:1px solid var(--gray200);background:var(--white);box-shadow:var(--shadow);}
+.big-table{border-collapse:collapse;white-space:nowrap;width:100%;}
+.big-table th,.big-table td{border:1px solid var(--gray100);}
+
+/* THEAD */
+.th-fix{background:var(--gray50);padding:13px 16px;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--gray500);vertical-align:middle;}
+.th-empresa {min-width:200px;}
+.th-contador{min-width:130px;}
+.th-tipo    {min-width:130px;}
+.th-tarea-name{background:var(--white);padding:10px 8px;font-size:12px;font-weight:600;
+  color:var(--gray700);text-align:center;vertical-align:middle;min-width:130px;
+  white-space:normal;line-height:1.4;max-width:150px;}
+.th-tarea-name.anual  {color:var(--blue1);}
+.th-tarea-name.mensual{color:#7c3aed;}
+.th-tarea-name.general{color:#d97706;}
+.th-flimite{background:var(--gray50);padding:13px 16px;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--gray500);min-width:120px;vertical-align:middle;}
+
+/* DATA CELLS */
+.td-empresa{background:var(--white);padding:12px 16px;vertical-align:middle;
+  border-right:2px solid var(--gray200);}
+.td-contador{background:var(--white);padding:10px 14px;vertical-align:middle;}
+.td-tipo{padding:10px 12px;vertical-align:middle;background:var(--gray50);}
+.td-task{padding:8px 6px;text-align:center;vertical-align:middle;
+  cursor:pointer;transition:background .15s;min-width:130px;}
+.td-task:hover{filter:brightness(.97);}
+/* fondos de alerta */
+.td-task.bg-porvencer{background:rgba(249,115,22,.12);}
+.td-task.bg-vencido  {background:rgba(220,38,38,.10);}
+.td-flimite{padding:10px 16px;vertical-align:middle;background:var(--white);}
+.td-empty{padding:10px 14px;color:var(--gray200);font-size:13px;text-align:center;
+  background:var(--gray50);}
+
+/* EMPRESA CELL */
+.emp-cell{display:flex;align-items:center;gap:10px;}
+.cdot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.cdot-alta {background:#ef4444;box-shadow:0 0 5px #ef4444;}
+.cdot-media{background:#f59e0b;box-shadow:0 0 5px #f59e0b;}
+.cdot-baja {background:#22c55e;box-shadow:0 0 5px #22c55e;}
+.emp-name{font-weight:700;font-size:14px;color:var(--navy);}
+.emp-comp{font-size:12px;color:var(--gray500);}
+
+.cnt-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  font-size:12px;font-weight:600;background:#f3eeff;color:#7c3aed;}
+
+.tipo-tag{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.tipo-tag.mensual{background:#f3eeff;color:#7c3aed;}
+.tipo-tag.general{background:#fffbeb;color:#d97706;}
+.tipo-tag.anual  {background:#eef3ff;color:var(--blue1);}
+
+.fecha-lim{font-size:13px;font-weight:600;color:var(--gray700);}
+.fecha-lim.vence-pronto{color:#f97316;font-weight:700;}
+.fecha-lim.vencida{color:#dc2626;font-weight:700;}
+
+/* TASK CELL — nueva estructura */
+.tcell{display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:8px 6px;min-width:120px;}
+/* círculo grande */
+.tcell-circle{width:22px;height:22px;border-radius:50%;flex-shrink:0;}
+.tcell-circle.asignado    {background:var(--c-asignado);  box-shadow:0 0 7px var(--c-asignado);}
+.tcell-circle.en_proceso  {background:var(--c-proceso);   box-shadow:0 0 7px var(--c-proceso);}
+.tcell-circle.en_validacion{background:var(--c-validacion);box-shadow:0 0 7px var(--c-validacion);}
+.tcell-circle.completado  {background:var(--c-completado);box-shadow:0 0 7px var(--c-completado);}
+/* fecha limite */
+.tcell-label{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.4px;color:var(--gray500);margin-top:2px;}
+.tcell-date{font-size:11px;font-weight:600;color:var(--gray700);font-family:monospace;}
+.tcell-date.completada-date{color:var(--c-completado);}
+/* imagen alerta */
+.tcell-alert{width:18px;height:18px;object-fit:contain;}
+
+/* PROGRESO en td-tipo */
+.prog-bar{height:5px;border-radius:3px;background:var(--gray100);overflow:hidden;width:100%;margin-top:5px;}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.prog-fill.mensual{background:#7c3aed;}
+.prog-fill.general{background:#d97706;}
+.prog-fill.anual  {background:var(--blue1);}
+.prog-label{font-size:10px;color:var(--gray500);margin-top:3px;}
+
+.empty-table{text-align:center;padding:52px;color:var(--gray500);font-size:15px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:var(--gray200);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo">Conta<span>Flow</span></span>
+    <span class="topbar-sep"></span>
+    <span class="topbar-page" id="page-label">Vista General</span>
+  </div>
+  <div class="topbar-right">
+    <div class="user-chip">
+      <span class="udot" id="udot"></span>
+      <span id="uname">—</span>
+    </div>
+    <a class="btn-nav primary" id="btn-asignar" href="asignar_tareas.html" style="display:none">＋ Asignar Tareas</a>
+    <button class="btn-logout" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="page-header">
+    <div class="page-title">Vista General de Empresas</div>
+    <div class="page-sub" id="page-sub">Haz click en una tarea para abrir su página de detalle.</div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="sdot asignado"></span>Asignado</div>
+    <div class="legend-item"><span class="sdot en_proceso"></span>En Proceso</div>
+    <div class="legend-item"><span class="sdot en_validacion"></span>En Validación</div>
+    <div class="legend-item"><span class="sdot completado"></span>Completado</div>
+    <div class="legend-item">
+      <span class="legend-box por_vencer"></span>No iniciada — Por Vencer
+    </div>
+    <div class="legend-item">
+      <span class="legend-box vencido"></span>No iniciada — Vencida
+    </div>
+    <div class="legend-item">
+      <img src="advertencia_media.png" class="legend-img" alt="obs media"/>Obs. media
+    </div>
+    <div class="legend-item">
+      <img src="advertencia_alta.png" class="legend-img" alt="obs importante"/>Obs. importante
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <span class="filter-label">Filtrar:</span>
+    <select id="f-contador" onchange="renderTable()"><option value="">Todos los contadores</option></select>
+    <select id="f-comp" onchange="renderTable()">
+      <option value="">Toda complejidad</option>
+      <option value="Alta">Alta</option>
+      <option value="Media">Media</option>
+      <option value="Baja">Baja</option>
+    </select>
+    <select id="f-estado" onchange="renderTable()">
+      <option value="">Todos los estados</option>
+      <option value="asignado">Asignado</option>
+      <option value="en_proceso">En Proceso</option>
+      <option value="en_validacion">En Validación</option>
+      <option value="por_vencer">Por Vencer</option>
+      <option value="vencido">Vencido</option>
+      <option value="completado">Completado</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table class="big-table" id="main-table"></table>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+const PAGE_FILE = location.pathname.split('/').pop();
+const PAGE_ROL  = PAGE_FILE.includes('directivo')?'directivo'
+                : PAGE_FILE.includes('supervisor')?'supervisor':'admin';
+let session = null;
+const ORDEN_TIPO  = ['mensual','general','anual'];
+const TIPO_COLOR  = {mensual:'#7c3aed',general:'#d97706',anual:'var(--blue1)'};
+const TIPO_LABEL  = {mensual:'Mensuales',general:'Generales / Esporádicas',anual:'Anuales'};
+
+document.addEventListener('DOMContentLoaded', () => {
+  session = DB.requireSession(['admin','directivo','supervisor']);
+  if (!session) return;
+  document.getElementById('uname').textContent = session.nombre;
+  document.getElementById('udot').className = 'udot udot-'+session.rol;
+  document.getElementById('page-label').textContent =
+    session.rol==='admin'?'Vista General — Administrador'
+    :session.rol==='directivo'?'Vista General — Directivo'
+    :'Vista General — Supervisor';
+  if (session.rol==='supervisor')
+    document.getElementById('page-sub').textContent =
+      'Haz click en una tarea para validarla o ver el detalle en una página aparte.';
+  if (session.rol!=='supervisor')
+    document.getElementById('btn-asignar').style.display='inline-flex';
+
+  const selCnt = document.getElementById('f-contador');
+  DB.getUsuarios().filter(u=>u.rol==='contador').forEach(u=>{
+    const o=document.createElement('option');
+    o.value=u.id; o.textContent=u.nombre; selCnt.appendChild(o);
+  });
+  renderTable();
+});
+
+/* ══ HELPERS ══ */
+function fmtFecha(iso){
+  if(!iso)return'—';
+  const d=new Date(iso);
+  return d.toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+function fmtFechaHora(iso){
+  if(!iso)return null;
+  const d=new Date(iso);
+  return d.toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric'})
+    +' '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+}
+function fechaLimClass(l){
+  if(!l)return'';
+  const now=new Date();now.setHours(0,0,0,0);
+  const lim=new Date(l+'T00:00:00');
+  if(lim<now)return'vencida';
+  if((lim-now)/86400000<=7)return'vence-pronto';
+  return'';
+}
+
+/* Estado visual actualizado:
+   - Si no iniciada (asignado) + vencida      → 'vencido_no_iniciado'
+   - Si no iniciada (asignado) + ≤7d           → 'porvencer_no_iniciado'
+   - Resto igual que antes */
+function getEstadoVisual(tarea){
+  if(tarea.estado==='completado')    return 'completado';
+  if(tarea.estado==='en_validacion') return 'en_validacion';
+  if(tarea.estado==='en_proceso')    return 'en_proceso';
+  // asignado — chequear fechas
+  if(tarea.fecha_limite){
+    const now=new Date();now.setHours(0,0,0,0);
+    const lim=new Date(tarea.fecha_limite+'T00:00:00');
+    if(lim<now)              return 'vencido_no_iniciado';
+    if((lim-now)/86400000<=7)return 'porvencer_no_iniciado';
+  }
+  return 'asignado';
+}
+
+/* Mapa estado → clase de círculo (solo los que tienen círculo) */
+function estadoCirculo(estado){
+  if(estado==='completado')    return 'completado';
+  if(estado==='en_validacion') return 'en_validacion';
+  if(estado==='en_proceso')    return 'en_proceso';
+  return 'asignado'; // asignado, porvencer_no_iniciado, vencido_no_iniciado
+}
+
+/* ══ RENDER TABLE ══ */
+function renderTable(){
+  const fCnt   = document.getElementById('f-contador').value;
+  const fComp  = document.getElementById('f-comp').value;
+  const fEstad = document.getElementById('f-estado').value;
+
+  let asigs = DB.getAsignaciones().filter(a=>a.activa);
+  if(fCnt)  asigs=asigs.filter(a=>a.contador_id===fCnt);
+  if(fComp) asigs=asigs.filter(a=>{
+    const e=DB.getEmpresa(a.empresa_id); return e&&e.complejidad===fComp;
+  });
+  const ORD={Alta:0,Media:1,Baja:2};
+  asigs.sort((a,b)=>{
+    const ea=DB.getEmpresa(a.empresa_id);
+    const eb=DB.getEmpresa(b.empresa_id);
+    return(ORD[ea?.complejidad]||9)-(ORD[eb?.complejidad]||9);
+  });
+
+  const table=document.getElementById('main-table');
+  table.innerHTML='';
+  if(!asigs.length){
+    table.innerHTML='<tr><td class="empty-table" colspan="99">Sin empresas asignadas.</td></tr>';
+    return;
+  }
+
+  const taskNames={mensual:[],general:[],anual:[]};
+  asigs.forEach(a=>{
+    DB.getTareasByAsignacion(a.id).forEach(t=>{
+      if(!taskNames[t.tipo])return;
+      if(!taskNames[t.tipo].includes(t.nombre))taskNames[t.tipo].push(t.nombre);
+    });
+  });
+
+  // THEAD
+  const thead=document.createElement('thead');
+  const trG=document.createElement('tr');
+  const mkTh=(txt,cls,cs,rs,style)=>{
+    const th=document.createElement('th');
+    th.className=cls;th.colSpan=cs||1;th.rowSpan=rs||1;
+    th.textContent=txt;if(style)th.style.cssText=style;
+    return th;
+  };
+  trG.appendChild(mkTh('Empresa','th-fix th-empresa',1,2));
+  if(session.rol!=='contador')
+    trG.appendChild(mkTh('Contador','th-fix th-contador',1,2));
+  trG.appendChild(mkTh('Tipo','th-fix th-tipo',1,2));
+  ORDEN_TIPO.forEach(tipo=>{
+    if(!taskNames[tipo].length)return;
+    const th=document.createElement('th');
+    th.colSpan=taskNames[tipo].length;
+    th.style.cssText=`background:var(--gray50);padding:12px 14px;font-size:13px;
+      font-weight:700;text-align:center;color:${TIPO_COLOR[tipo]};
+      border-left:3px solid ${TIPO_COLOR[tipo]};letter-spacing:.3px;`;
+    th.textContent='— '+TIPO_LABEL[tipo]+' —';
+    trG.appendChild(th);
+  });
+  trG.appendChild(mkTh('Fecha Límite','th-flimite',1,2));
+  thead.appendChild(trG);
+
+  const trN=document.createElement('tr');
+  ORDEN_TIPO.forEach(tipo=>{
+    taskNames[tipo].forEach((nombre,ni)=>{
+      const th=document.createElement('th');
+      th.className='th-tarea-name '+tipo;
+      th.textContent=nombre;
+      if(ni===0)th.style.borderLeft=`3px solid ${TIPO_COLOR[tipo]}`;
+      trN.appendChild(th);
+    });
+  });
+  thead.appendChild(trN);
+  table.appendChild(thead);
+
+  // TBODY
+  const tbody=document.createElement('tbody');
+  asigs.forEach(a=>{
+    const emp=DB.getEmpresa(a.empresa_id);
+    const cnt=DB.getUsuario(a.contador_id);
+    if(!emp)return;
+    const todasTareas=DB.getTareasByAsignacion(a.id);
+    const seccionesPresentes=ORDEN_TIPO.filter(t=>todasTareas.some(ta=>ta.tipo===t));
+    if(!seccionesPresentes.length)return;
+
+    let seccionesRender=seccionesPresentes;
+    if(fEstad){
+      // mapear filtro a estado visual
+      seccionesRender=seccionesPresentes.filter(t=>
+        todasTareas.filter(ta=>ta.tipo===t).some(ta=>{
+          const ev=getEstadoVisual(ta);
+          if(fEstad==='por_vencer') return ev==='porvencer_no_iniciado';
+          if(fEstad==='vencido')    return ev==='vencido_no_iniciado';
+          return ev===fEstad;
+        })
+      );
+      if(!seccionesRender.length)return;
+    }
+
+    seccionesRender.forEach((tipo,si)=>{
+      const tr=document.createElement('tr');
+
+      // Empresa rowspan
+      if(si===0){
+        const td=document.createElement('td');
+        td.className='td-empresa';td.rowSpan=seccionesRender.length;
+        const cc=emp.complejidad==='Alta'?'alta':emp.complejidad==='Media'?'media':'baja';
+        td.innerHTML=`<div class="emp-cell">
+          <span class="cdot cdot-${cc}" title="${emp.complejidad}"></span>
+          <div><div class="emp-name">${emp.nombre}</div>
+          <div class="emp-comp">${emp.complejidad}</div></div>
+        </div>`;
+        tr.appendChild(td);
+      }
+
+      // Contador rowspan
+      if(si===0&&session.rol!=='contador'){
+        const td=document.createElement('td');
+        td.className='td-contador';td.rowSpan=seccionesRender.length;
+        td.innerHTML=`<span class="cnt-badge">👤 ${cnt?cnt.nombre:'—'}</span>`;
+        tr.appendChild(td);
+      }
+
+      // Tipo + progreso
+      const tareasDeEste=todasTareas.filter(t=>t.tipo===tipo);
+      const total=tareasDeEste.length;
+      const completadas=tareasDeEste.filter(t=>t.estado==='completado').length;
+      const pct=total?Math.round((completadas/total)*100):0;
+      const progColors={mensual:'#7c3aed',general:'#d97706',anual:'var(--blue1)'};
+      const tipoLabels={mensual:'Mensual',general:'General',anual:'Anual'};
+
+      const tdTipo=document.createElement('td');
+      tdTipo.className='td-tipo';
+      tdTipo.style.borderLeft=`3px solid ${TIPO_COLOR[tipo]}`;
+      tdTipo.innerHTML=`
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-start;">
+          <span class="tipo-tag ${tipo}">${tipoLabels[tipo]}</span>
+          <div style="width:100%;min-width:80px;">
+            <div class="prog-bar">
+              <div class="prog-fill ${tipo}" style="width:${pct}%"></div>
+            </div>
+            <div class="prog-label">${completadas}/${total} (${pct}%)</div>
+          </div>
+        </div>`;
+      tr.appendChild(tdTipo);
+
+      // Celdas de tareas
+      ORDEN_TIPO.forEach(tipoCol=>{
+        if(!taskNames[tipoCol].length)return;
+        taskNames[tipoCol].forEach((nombre,ni)=>{
+          const tdT=document.createElement('td');
+          tdT.className='td-task';
+          if(ni===0)tdT.style.borderLeft=`3px solid ${TIPO_COLOR[tipoCol]}`;
+
+          if(tipoCol!==tipo){
+            tdT.className+=' td-empty';
+            tdT.innerHTML='<span style="color:var(--gray200)">—</span>';
+            tr.appendChild(tdT);return;
+          }
+
+          const tarea=tareasDeEste.find(t=>t.nombre===nombre);
+          if(!tarea){
+            tdT.className+=' td-empty';
+            tdT.innerHTML='<span style="color:var(--gray200)">—</span>';
+            tr.appendChild(tdT);return;
+          }
+
+          const ev=getEstadoVisual(tarea);
+
+          // Aplicar fondo naranja/rojo si no iniciada
+          if(ev==='porvencer_no_iniciado') tdT.classList.add('bg-porvencer');
+          if(ev==='vencido_no_iniciado')   tdT.classList.add('bg-vencido');
+
+          // Filtro estado
+          if(fEstad){
+            const match =
+              (fEstad==='por_vencer' && ev==='porvencer_no_iniciado')||
+              (fEstad==='vencido'    && ev==='vencido_no_iniciado')  ||
+              (fEstad===ev);
+            if(!match){
+              tdT.className+=' td-empty';
+              tdT.innerHTML='<span style="color:var(--gray200)">—</span>';
+              tr.appendChild(tdT);return;
+            }
+          }
+
+          tdT.onclick=()=>goToDetalle(tarea.id);
+
+          // Imagen de alerta
+          let alertHtml='';
+          if(tarea.prioridad_observacion==='alta')
+            alertHtml=`<img src="advertencia_alta.png" class="tcell-alert" alt="obs importante"/>`;
+          if(tarea.prioridad_observacion==='media')
+            alertHtml=`<img src="advertencia_media.png" class="tcell-alert" alt="obs media"/>`;
+
+          const circulo=estadoCirculo(ev);
+
+          // Fecha completada
+          let fechaCompHtml='';
+          if(tarea.estado==='completado'&&tarea.fecha_completado){
+            fechaCompHtml=`
+              <div class="tcell-label">Completada</div>
+              <div class="tcell-date completada-date">${fmtFecha(tarea.fecha_completado)}</div>`;
+          }
+
+          tdT.innerHTML=`<div class="tcell">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span class="tcell-circle ${circulo}"></span>
+              ${alertHtml}
+            </div>
+            <div class="tcell-label">Fecha límite</div>
+            <div class="tcell-date">${fmtFecha(tarea.fecha_limite)}</div>
+            ${fechaCompHtml}
+          </div>`;
+          tr.appendChild(tdT);
+        });
+      });
+
+      // Fecha límite rowspan
+      if(si===0){
+        const tdF=document.createElement('td');
+        tdF.className='td-flimite';tdF.rowSpan=seccionesRender.length;
+        tdF.innerHTML=`<span class="fecha-lim ${fechaLimClass(a.fecha_limite)}">
+          ${fmtFecha(a.fecha_limite)}</span>`;
+        tr.appendChild(tdF);
+      }
+      tbody.appendChild(tr);
+    });
+  });
+  table.appendChild(tbody);
+}
+
+function goToDetalle(tareaId) {
+  window.location.href = `detalle_tarea.html?id=${encodeURIComponent(tareaId)}&from=${encodeURIComponent(PAGE_FILE)}`;
+}
+function logout(){ DB.clearSession(); window.location.href='login.html'; }
+</script>
+</body>
+</html>
