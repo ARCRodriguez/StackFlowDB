@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zidkenu — Dashboard</title>
+<link rel="stylesheet" href="zidkenu_style.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+</head>
+<body class="zk-app">
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+    </div>
+    <span class="brand-text">Zid<span>kenu</span></span>
+  </div>
+  <div class="sidebar-user-info">
+    <div class="user-avatar" id="sidebarAvatar"></div>
+    <div class="user-name-side" id="sidebarName">—</div>
+    <span class="role-badge" id="sidebarRoleBadge">—</span>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <button class="logout-btn" onclick="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+      </svg>
+      Cerrar Sesión
+    </button>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="app-topbar">
+    <div class="topbar-left">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p id="pageSubtitle">Vista general del sistema</p>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="currentDate">—</span>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="welcome-banner">
+      <div class="welcome-role-line" id="welcomeRoleLine">—</div>
+      <div class="welcome-name" id="welcomeName">Bienvenido —</div>
+      <div class="welcome-subtitle" id="welcomeSubtitle">—</div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="section-title" id="modulesTitle">Módulos disponibles</div>
+    <div class="modules-grid" id="modulesGrid"></div>
+  </div>
+</main>
+
+<div class="toast-app" id="toast">
+  <svg style="width:18px;height:18px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+  </svg>
+  <span id="toastMsg">—</span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  DATOS PREDEFINIDOS (sin base de datos)
+//  Alineados al diccionario de variables del sistema
+// ═══════════════════════════════════════════════════════
+
+// Tareas del sistema — estado: pendiente | en_progreso | completada | aprobada | rechazada
+// tipo: MENSUAL | ANUAL | GENERAL
+const TAREAS = [
+  { id:1,  nombre:"PDT 621 - Enero",        tipo:"MENSUAL", estado:"completada",  contadorId:2, empresaId:1, createdBy:4, periodo:"2026-01" },
+  { id:2,  nombre:"PDT 621 - Febrero",       tipo:"MENSUAL", estado:"completada",  contadorId:2, empresaId:1, createdBy:4, periodo:"2026-02" },
+  { id:3,  nombre:"PDT 621 - Marzo",         tipo:"MENSUAL", estado:"completada",  contadorId:2, empresaId:1, createdBy:4, periodo:"2026-03" },
+  { id:4,  nombre:"PDT 621 - Abril",         tipo:"MENSUAL", estado:"en_progreso", contadorId:2, empresaId:1, createdBy:4, periodo:"2026-04" },
+  { id:5,  nombre:"Planilla Enero",          tipo:"MENSUAL", estado:"completada",  contadorId:2, empresaId:1, createdBy:4, periodo:"2026-01" },
+  { id:6,  nombre:"Planilla Febrero",        tipo:"MENSUAL", estado:"completada",  contadorId:2, empresaId:1, createdBy:4, periodo:"2026-02" },
+  { id:7,  nombre:"AFP Net - Enero",         tipo:"MENSUAL", estado:"completada",  contadorId:6, empresaId:2, createdBy:4, periodo:"2026-01" },
+  { id:8,  nombre:"AFP Net - Febrero",       tipo:"MENSUAL", estado:"completada",  contadorId:6, empresaId:2, createdBy:4, periodo:"2026-02" },
+  { id:9,  nombre:"AFP Net - Marzo",         tipo:"MENSUAL", estado:"pendiente",   contadorId:6, empresaId:2, createdBy:4, periodo:"2026-03" },
+  { id:10, nombre:"Cierre Anual 2025",       tipo:"ANUAL",   estado:"aprobada",    contadorId:2, empresaId:1, createdBy:4, periodo:"2025" },
+  { id:11, nombre:"Declaración Anual 2025",  tipo:"ANUAL",   estado:"aprobada",    contadorId:6, empresaId:2, createdBy:4, periodo:"2025" },
+  { id:12, nombre:"Revisión Contratos",      tipo:"GENERAL", estado:"pendiente",   contadorId:2, empresaId:3, createdBy:4, periodo:null },
+  { id:13, nombre:"PDT 601 - Enero",         tipo:"MENSUAL", estado:"completada",  contadorId:6, empresaId:3, createdBy:4, periodo:"2026-01" },
+  { id:14, nombre:"PDT 601 - Febrero",       tipo:"MENSUAL", estado:"en_progreso", contadorId:6, empresaId:3, createdBy:4, periodo:"2026-02" },
+  { id:15, nombre:"Conciliación Bancaria",   tipo:"MENSUAL", estado:"pendiente",   contadorId:2, empresaId:2, createdBy:3, periodo:"2026-04" },
+  // Tareas de usuarios normales
+  { id:16, nombre:"Registro Facturas",       tipo:"GENERAL", estado:"completada",  contadorId:1, empresaId:1, createdBy:3, periodo:null },
+  { id:17, nombre:"Archivo Documentos",      tipo:"GENERAL", estado:"pendiente",   contadorId:1, empresaId:1, createdBy:3, periodo:null },
+  { id:18, nombre:"Control Pagos",           tipo:"MENSUAL", estado:"en_progreso", contadorId:7, empresaId:2, createdBy:3, periodo:"2026-04" },
+  { id:19, nombre:"Inventario Activos",      tipo:"GENERAL", estado:"completada",  contadorId:7, empresaId:2, createdBy:3, periodo:null },
+  { id:20, nombre:"PDT 621 - Mayo (borrador)",tipo:"MENSUAL",estado:"pendiente",   contadorId:2, empresaId:1, createdBy:4, periodo:"2026-05" },
+];
+
+// Usuarios
+const USUARIOS_DATA = [
+  { id:1, nombre:"Carlos Quispe",  correo:"usuario@zidkenu.com",    rol:"usuario",       activo:true  },
+  { id:2, nombre:"Ana Condori",    correo:"contador@zidkenu.com",   rol:"contador",      activo:true  },
+  { id:3, nombre:"María Torres",   correo:"supervisor@zidkenu.com", rol:"supervisor",    activo:true  },
+  { id:4, nombre:"Roberto Díaz",   correo:"directivo@zidkenu.com",  rol:"directivo",     activo:true  },
+  { id:5, nombre:"Admin Zidkenu",  correo:"admin@zidkenu.com",      rol:"administrador", activo:true  },
+  { id:6, nombre:"Lucía Mamani",   correo:"lucia@zidkenu.com",      rol:"contador",      activo:true  },
+  { id:7, nombre:"Jorge Paredes",  correo:"jorge@zidkenu.com",      rol:"usuario",       activo:false },
+];
+
+// Empresas
+const EMPRESAS = [
+  { id:1, razonSocial:"Corporación Andina S.A.C.",   ruc:"20512345678", contadorId:2, estado:"activo" },
+  { id:2, razonSocial:"Inversiones del Sur E.I.R.L.",ruc:"20609876543", contadorId:6, estado:"activo" },
+  { id:3, razonSocial:"Textiles Lima S.R.L.",         ruc:"20456789012", contadorId:2, estado:"activo" },
+  { id:4, razonSocial:"Servicios Generales Norte",    ruc:"20311222333", contadorId:6, estado:"inactivo"},
+];
+
+// ═══════════════════════════════════════════════════════
+//  FUNCIONES DE CÁLCULO DE STATS
+// ═══════════════════════════════════════════════════════
+
+function calcStats(user) {
+  const rol = user.rol;
+  const uid = user.id;
+
+  if (rol === 'usuario') {
+    const misTareas = TAREAS.filter(t => t.contadorId === uid);
+    const total       = misTareas.length;
+    const completadas = misTareas.filter(t => t.estado === 'completada' || t.estado === 'aprobada').length;
+    const pendientes  = misTareas.filter(t => t.estado === 'pendiente').length;
+    const enProgreso  = misTareas.filter(t => t.estado === 'en_progreso').length;
+    const pct = total > 0 ? Math.round((completadas / total) * 100) : 0;
+    return { pendientes, completadas, enProgreso, cumplimiento: pct };
+  }
+
+  if (rol === 'contador') {
+    const misTareas = TAREAS.filter(t => t.contadorId === uid);
+    const total       = misTareas.length;
+    const completadas = misTareas.filter(t => t.estado === 'completada' || t.estado === 'aprobada').length;
+    const pendientes  = misTareas.filter(t => t.estado === 'pendiente').length;
+    const enProgreso  = misTareas.filter(t => t.estado === 'en_progreso').length;
+    const pct = total > 0 ? Math.round((completadas / total) * 100) : 0;
+    const empresas = [...new Set(misTareas.map(t => t.empresaId))].length;
+    return { pendientes, completadas, enProgreso, cumplimiento: pct, misEmpresas: empresas };
+  }
+
+  if (rol === 'supervisor') {
+    // Supervisor ve tareas de contadores y usuarios
+    const contadores = USUARIOS_DATA.filter(u => u.rol === 'contador' || u.rol === 'usuario').map(u => u.id);
+    const tareas = TAREAS.filter(t => contadores.includes(t.contadorId));
+    const total       = tareas.length;
+    const completadas = tareas.filter(t => t.estado === 'completada' || t.estado === 'aprobada').length;
+    const pendientes  = tareas.filter(t => t.estado === 'pendiente').length;
+    const enProgreso  = tareas.filter(t => t.estado === 'en_progreso').length;
+    const pct = total > 0 ? Math.round((completadas / total) * 100) : 0;
+    const activos = USUARIOS_DATA.filter(u => u.activo && (u.rol === 'contador' || u.rol === 'usuario')).length;
+    return { pendientes, completadas, enProgreso, cumplimiento: pct, colaboradoresActivos: activos };
+  }
+
+  // directivo / administrador — vista global
+  const total       = TAREAS.length;
+  const completadas = TAREAS.filter(t => t.estado === 'completada' || t.estado === 'aprobada').length;
+  const pendientes  = TAREAS.filter(t => t.estado === 'pendiente').length;
+  const enProgreso  = TAREAS.filter(t => t.estado === 'en_progreso').length;
+  const pct = total > 0 ? Math.round((completadas / total) * 100) : 0;
+  const empresasActivas = EMPRESAS.filter(e => e.estado === 'activo').length;
+  const usuariosActivos = USUARIOS_DATA.filter(u => u.activo).length;
+  return { pendientes, completadas, enProgreso, cumplimiento: pct, empresasActivas, usuariosActivos };
+}
+
+// ═══════════════════════════════════════════════════════
+//  ÍCONOS SVG
+// ═══════════════════════════════════════════════════════
+const homeIcon      = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`;
+const taskIcon      = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`;
+const buildingIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`;
+const usersIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`;
+const chartIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`;
+const checkIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`;
+const clockIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+const alertIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+const trendIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`;
+
+const rolLabels = {
+  usuario: "👤 Usuario", contador: "🧾 Contador",
+  supervisor: "🔍 Supervisor", directivo: "📊 Directivo", administrador: "⚙️ Administrador"
+};
+
+// ═══════════════════════════════════════════════════════
+//  CONFIG POR ROL
+// ═══════════════════════════════════════════════════════
+const rolConfig = {
+
+  // ── USUARIO ──
+  usuario: {
+    gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
+    badgeBg: "rgba(1,173,243,0.18)", badgeColor: "#01ADF3",
+    welcomeRol: "Portal de Usuario",
+    subtitle: "Revisa tus tareas asignadas, registra avances y mantén al día tu porcentaje de cumplimiento.",
+    buildStats: (s) => [
+      { label:"Mis Tareas Pendientes",  value: s.pendientes,   icon: alertIcon,  iconBg:"rgba(239,68,68,0.1)",   iconColor:"#ef4444", change:"Por completar",    cls:"neutral" },
+      { label:"Tareas Completadas",     value: s.completadas,  icon: checkIcon,  iconBg:"rgba(16,185,129,0.1)",  iconColor:"#10b981", change:"↑ Buen ritmo",     cls:"up"      },
+      { label:"En Progreso",            value: s.enProgreso,   icon: clockIcon,  iconBg:"rgba(245,158,11,0.1)",  iconColor:"#f59e0b", change:"En ejecución",     cls:"neutral" },
+      { label:"Cumplimiento",           value: s.cumplimiento+'%', icon: trendIcon,iconBg:"rgba(1,173,243,0.1)", iconColor:"#01ADF3", change:"↑ Meta mensual",   cls:"up",      bar: s.cumplimiento },
+    ],
+    modules: [
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#013657,#01ADF3)", title:"Mis Tareas",
+        desc:"Visualiza y actualiza el estado de las tareas que tienes asignadas.",
+        access:"Acceso completo", type:"full", href:"mis_tareas.html" }
+    ],
+    nav: () => [
+      { label:"Dashboard",  icon:homeIcon, active:true, href:'#' },
+      { section:"Mis módulos" },
+      { label:"Mis Tareas", icon:taskIcon, href:'mis_tareas.html' },
+    ]
+  },
+
+  // ── CONTADOR ──
+  contador: {
+    gradientAvatar: "linear-gradient(135deg,#059669,#01ADF3)",
+    badgeBg: "rgba(5,150,105,0.15)", badgeColor: "#059669",
+    welcomeRol: "Portal de Contador",
+    subtitle: "Gestiona las tareas contables de tus empresas asignadas: planillas, AFP, PDT y obligaciones tributarias.",
+    buildStats: (s) => [
+      { label:"Tareas Pendientes",   value: s.pendientes,      icon: alertIcon, iconBg:"rgba(239,68,68,0.1)",  iconColor:"#ef4444", change:"Por completar",   cls:"neutral" },
+      { label:"Completadas",         value: s.completadas,     icon: checkIcon, iconBg:"rgba(16,185,129,0.1)", iconColor:"#10b981", change:"↑ Al día",        cls:"up"      },
+      { label:"En Progreso",         value: s.enProgreso,      icon: clockIcon, iconBg:"rgba(245,158,11,0.1)", iconColor:"#f59e0b", change:"En ejecución",    cls:"neutral" },
+      { label:"Mis Empresas",        value: s.misEmpresas,     icon: buildingIcon.replace('currentColor','#01ADF3'), iconBg:"rgba(1,173,243,0.1)", iconColor:"#01ADF3", change:"Cartera activa", cls:"neutral" },
+      { label:"Cumplimiento",        value: s.cumplimiento+'%',icon: trendIcon, iconBg:"rgba(1,173,243,0.08)", iconColor:"#01ADF3", change:"↑ Meta mensual",  cls:"up", bar: s.cumplimiento },
+    ],
+    modules: [
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#059669,#01ADF3)", title:"Mis Tareas",
+        desc:"Gestiona y actualiza tus tareas contables: planillas, AFP, PDT y más.",
+        access:"Acceso completo", type:"full", href:"mis_tareas.html" }
+    ],
+    nav: () => [
+      { label:"Dashboard",  icon:homeIcon, active:true, href:'#' },
+      { section:"Mis módulos" },
+      { label:"Mis Tareas", icon:taskIcon, href:'mis_tareas.html' },
+    ]
+  },
+
+  // ── SUPERVISOR ──
+  supervisor: {
+    gradientAvatar: "linear-gradient(135deg,#013657,#01ADF3)",
+    badgeBg: "rgba(1,173,243,0.15)", badgeColor: "#01ADF3",
+    welcomeRol: "Portal de Supervisor",
+    subtitle: "Supervisa el cumplimiento de tus contadores y usuarios, valida las tareas entregadas y monitorea el rendimiento del equipo.",
+    buildStats: (s) => [
+      { label:"Tareas Pendientes",      value: s.pendientes,          icon: alertIcon, iconBg:"rgba(239,68,68,0.1)",  iconColor:"#ef4444", change:"Requieren atención",  cls:"down"    },
+      { label:"Completadas (equipo)",   value: s.completadas,         icon: checkIcon, iconBg:"rgba(16,185,129,0.1)", iconColor:"#10b981", change:"↑ Buen avance",        cls:"up"      },
+      { label:"En Progreso",            value: s.enProgreso,          icon: clockIcon, iconBg:"rgba(245,158,11,0.1)", iconColor:"#f59e0b", change:"En ejecución",         cls:"neutral" },
+      { label:"Colaboradores Activos",  value: s.colaboradoresActivos,icon: usersIcon.replace('currentColor','#01ADF3'), iconBg:"rgba(1,173,243,0.1)", iconColor:"#01ADF3", change:"En el equipo", cls:"neutral" },
+      { label:"Cumplimiento General",   value: s.cumplimiento+'%',    icon: trendIcon, iconBg:"rgba(1,173,243,0.08)", iconColor:"#01ADF3", change:"↑ Meta del mes",       cls:"up", bar: s.cumplimiento },
+    ],
+    modules: [
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#0A2041,#013657)", title:"Vista General de Tareas",
+        desc:"Visualiza todas las tareas del sistema y el avance de cada colaborador.",
+        access:"Acceso completo", type:"full", href:"vista_admin.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+        iconBg:"linear-gradient(135deg,#013657,#01ADF3)", title:"Tareas en Validación",
+        desc:"Revisa y aprueba las tareas enviadas por contadores y usuarios que esperan tu validación.",
+        access:"Validación supervisor", type:"validacion", href:"vista_supervisor.html" },
+    ],
+    nav: () => [
+      { label:"Dashboard",            icon:homeIcon,  active:true, href:'#' },
+      { section:"Módulos" },
+      { label:"Vista General Tareas", icon:taskIcon,  href:'vista_admin.html' },
+      { label:"Tareas en Validación", icon:checkIcon, href:'vista_supervisor.html' },
+    ]
+  },
+
+  // ── DIRECTIVO ──
+  directivo: {
+    gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
+    badgeBg: "rgba(255,255,255,0.15)", badgeColor: "#ffffff",
+    welcomeRol: "Portal Directivo",
+    subtitle: "Gestiona la cartera de empresas, asigna contadores, aprueba tareas de alto nivel y monitorea el desempeño organizacional.",
+    buildStats: (s) => [
+      { label:"Empresas Activas",    value: s.empresasActivas,  icon: buildingIcon.replace('currentColor','#013657'), iconBg:"rgba(0,74,173,0.1)", iconColor:"#013657", change:"En cartera",        cls:"neutral" },
+      { label:"Usuarios Activos",    value: s.usuariosActivos,  icon: usersIcon.replace('currentColor','#01ADF3'),    iconBg:"rgba(1,173,243,0.1)",iconColor:"#01ADF3", change:"Colaboradores",     cls:"neutral" },
+      { label:"Tareas Completadas",  value: s.completadas,      icon: checkIcon,  iconBg:"rgba(16,185,129,0.1)", iconColor:"#10b981", change:"↑ Del sistema",       cls:"up"      },
+      { label:"Tareas Pendientes",   value: s.pendientes,       icon: alertIcon,  iconBg:"rgba(239,68,68,0.1)",  iconColor:"#ef4444", change:"Por resolver",        cls:"down"    },
+      { label:"Cumplimiento Global", value: s.cumplimiento+'%', icon: trendIcon,  iconBg:"rgba(1,173,243,0.08)", iconColor:"#01ADF3", change:"↑ Objetivo anual",    cls:"up", bar: s.cumplimiento },
+    ],
+    modules: [
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#013657,#0A2041)", title:"Módulo de Empresas",
+        desc:"Gestiona la cartera de empresas, asigna contadores y crea las tareas correspondientes.",
+        access:"Acceso completo", type:"full", href:"modulo_empresas.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        iconBg:"linear-gradient(135deg,#01ADF3,#01ADF3)", title:"Vista General de Tareas",
+        desc:"Consulta el estado de todas las tareas del sistema organizadas por empresa y contador.",
+        access:"Acceso completo", type:"full", href:"vista_admin.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+        iconBg:"linear-gradient(135deg,#0A2041,#01ADF3)", title:"Tareas en Validación",
+        desc:"Revisa y aprueba las tareas de alto nivel que esperan tu validación directiva.",
+        access:"Validación directivo", type:"validacion", href:"vista_directivo.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Dashboard BI",
+        desc:"Indicadores de desempeño, porcentajes de cumplimiento y métricas avanzadas del equipo.",
+        access:"Analítica BI", type:"bi", href:"dashboard_bi.html" },
+    ],
+    nav: () => [
+      { label:"Dashboard",            icon:homeIcon,     active:true, href:'#' },
+      { section:"Módulos" },
+      { label:"Módulo de Empresas",   icon:buildingIcon, href:'modulo_empresas.html' },
+      { label:"Vista General Tareas", icon:taskIcon,     href:'vista_admin.html' },
+      { label:"Tareas en Validación", icon:checkIcon,    href:'vista_directivo.html' },
+      { label:"Dashboard BI",         icon:chartIcon,    href:'dashboard_bi.html' },
+    ]
+  },
+
+  // ── ADMINISTRADOR ──
+  administrador: {
+    gradientAvatar: "linear-gradient(135deg,#01ADF3,#01ADF3)",
+    badgeBg: "rgba(255,255,255,0.15)", badgeColor: "#ffffff",
+    welcomeRol: "Panel Administrador",
+    subtitle: "Tienes acceso total al sistema: gestiona usuarios, empresas, supervisa tareas y monitorea métricas de toda la organización.",
+    buildStats: (s) => [
+      { label:"Usuarios Activos",    value: s.usuariosActivos,  icon: usersIcon.replace('currentColor','#01ADF3'),    iconBg:"rgba(1,173,243,0.1)",iconColor:"#01ADF3", change:"En el sistema",       cls:"neutral" },
+      { label:"Empresas Activas",    value: s.empresasActivas,  icon: buildingIcon.replace('currentColor','#013657'), iconBg:"rgba(0,74,173,0.1)", iconColor:"#013657", change:"En cartera",          cls:"neutral" },
+      { label:"Tareas Completadas",  value: s.completadas,      icon: checkIcon,  iconBg:"rgba(16,185,129,0.1)", iconColor:"#10b981", change:"↑ Del sistema",         cls:"up"      },
+      { label:"Tareas Pendientes",   value: s.pendientes,       icon: alertIcon,  iconBg:"rgba(239,68,68,0.1)",  iconColor:"#ef4444", change:"Requieren atención",    cls:"down"    },
+      { label:"Cumplimiento Global", value: s.cumplimiento+'%', icon: trendIcon,  iconBg:"rgba(1,173,243,0.08)", iconColor:"#01ADF3", change:"↑ Objetivo anual",      cls:"up", bar: s.cumplimiento },
+    ],
+    modules: [
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#01ADF3,#01ADF3)", title:"Vista General de Tareas",
+        desc:"Gestión y supervisión completa de todas las tareas del sistema.",
+        access:"Acceso completo", type:"full", href:"vista_admin.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
+        iconBg:"linear-gradient(135deg,#013657,#0A2041)", title:"Módulo de Empresas",
+        desc:"Control total de empresas: crear, asignar contadores y gestionar la cartera.",
+        access:"Acceso completo", type:"full", href:"modulo_empresas.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+        iconBg:"linear-gradient(135deg,#059669,#01ADF3)", title:"Validación Supervisores",
+        desc:"Tareas que están pendientes de validación por parte de los supervisores.",
+        access:"Acceso completo", type:"full", href:"vista_supervisor.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        iconBg:"linear-gradient(135deg,#0A2041,#013657)", title:"Validación Directivos",
+        desc:"Tareas de alto nivel pendientes de aprobación por parte del directivo.",
+        access:"Acceso completo", type:"full", href:"vista_directivo.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+        iconBg:"linear-gradient(135deg,#0A2041,#01ADF3)", title:"Gestión de Usuarios",
+        desc:"Crea cuentas, asigna roles y administra todos los usuarios del sistema.",
+        access:"Acceso completo", type:"admin", href:"admin_usuarios.html" },
+      { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Dashboard BI",
+        desc:"Indicadores clave de desempeño, porcentajes y análisis avanzado de la organización.",
+        access:"Analítica BI", type:"bi", href:"dashboard_bi.html" },
+    ],
+    nav: () => [
+      { label:"Dashboard",              icon:homeIcon,     active:true, href:'#' },
+      { section:"Tareas" },
+      { label:"Vista General Tareas",   icon:taskIcon,     href:'vista_admin.html' },
+      { label:"Validación Supervisores",icon:checkIcon,    href:'vista_supervisor.html' },
+      { label:"Validación Directivos",  icon:checkIcon,    href:'vista_directivo.html' },
+      { section:"Empresas y Usuarios" },
+      { label:"Módulo de Empresas",     icon:buildingIcon, href:'modulo_empresas.html' },
+      { label:"Gestión de Usuarios",    icon:usersIcon,    href:'admin_usuarios.html' },
+      { section:"Analítica" },
+      { label:"Dashboard BI",           icon:chartIcon,    href:'dashboard_bi.html' },
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+let currentUser = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const stored = sessionStorage.getItem('zidkenu_user');
+  if (!stored) { window.location.href = 'login.html'; return; }
+  currentUser = JSON.parse(stored);
+
+  if (!rolConfig[currentUser.rol]) {
+    showToast('⚠️ Rol no reconocido. Redirigiendo...');
+    setTimeout(() => logout(), 2000);
+    return;
+  }
+
+  setDate();
+  buildSidebar(currentUser);
+  buildWelcome(currentUser);
+  buildStats(currentUser);
+  buildModules(currentUser);
+});
+
+function setDate() {
+  const now = new Date();
+  document.getElementById('currentDate').textContent =
+    now.toLocaleDateString('es-PE', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+
+function buildSidebar(user) {
+  const cfg = rolConfig[user.rol];
+  const initials = user.nombre.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  const av = document.getElementById('sidebarAvatar');
+  av.textContent  = initials;
+  av.style.background = cfg.gradientAvatar;
+
+  document.getElementById('sidebarName').textContent = user.nombre;
+  const rb = document.getElementById('sidebarRoleBadge');
+  rb.textContent   = rolLabels[user.rol] || user.rol;
+  rb.style.background = cfg.badgeBg;
+  rb.style.color      = cfg.badgeColor;
+
+  const checkSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+  const navItems = cfg.nav();
+  document.getElementById('sidebarNav').innerHTML = navItems.map(item => {
+    if (item.section) return `<div class="nav-section-label">${item.section}</div>`;
+    return `<a class="nav-item ${item.active ? 'active' : ''}" href="${item.href}">${item.icon}${item.label}</a>`;
+  }).join('');
+}
+
+function buildWelcome(user) {
+  const cfg = rolConfig[user.rol];
+  document.getElementById('welcomeRoleLine').textContent  = cfg.welcomeRol;
+  document.getElementById('welcomeName').textContent      = `Bienvenido, ${user.nombre.split(' ')[0]}`;
+  document.getElementById('welcomeSubtitle').textContent  = cfg.subtitle;
+  document.getElementById('pageTitle').textContent        = cfg.welcomeRol;
+  document.getElementById('pageSubtitle').textContent     = `Sesión activa · ${rolLabels[user.rol]}`;
+}
+
+function buildStats(user) {
+  const cfg   = rolConfig[user.rol];
+  const stats = calcStats(user);
+  const cards = cfg.buildStats(stats);
+  const statsRow = document.getElementById('statsRow');
+
+  statsRow.innerHTML = cards.map(c => `
+    <div class="stat-card">
+      <div class="stat-icon" style="background:${c.iconBg};color:${c.iconColor}">${c.icon}</div>
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value">${c.value}</div>
+      <div class="stat-change ${c.cls}">${c.change}</div>
+      ${c.bar !== undefined ? `
+        <div class="progress-bar-wrap" style="margin-top:10px">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="bar_${c.label.replace(/\s/g,'')}"
+              style="width:0%;background:linear-gradient(90deg,#013657,#01ADF3)"></div>
+          </div>
+        </div>` : ''}
+    </div>
+  `).join('');
+
+  // Animar barras de progreso
+  setTimeout(() => {
+    cards.forEach(c => {
+      if (c.bar !== undefined) {
+        const el = document.getElementById('bar_' + c.label.replace(/\s/g,''));
+        if (el) el.style.width = c.bar + '%';
+      }
+    });
+  }, 200);
+}
+
+function buildModules(user) {
+  const cfg  = rolConfig[user.rol];
+  const grid = document.getElementById('modulesGrid');
+
+  const typeMap = {
+    full:       { cls:'access-full',       icon:'✅' },
+    validacion: { cls:'access-validacion', icon:'🔍' },
+    admin:      { cls:'access-admin',      icon:'⚙️' },
+    bi:         { cls:'access-bi',         icon:'📊' },
+  };
+
+  grid.innerHTML = cfg.modules.map(m => {
+    const t = typeMap[m.type] || typeMap.full;
+    return `
+      <a class="module-card" href="${m.href}">
+        <div class="module-icon-wrap" style="background:${m.iconBg}">${m.icon}</div>
+        <div class="module-title">${m.title}</div>
+        <div class="module-desc">${m.desc}</div>
+        <span class="module-access-label ${t.cls}">${t.icon} ${m.access}</span>
+      </a>`;
+  }).join('');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.display = 'flex';
+  setTimeout(() => { t.style.display = 'none'; }, 3000);
+}
+
+function logout() {
+  if (confirm('¿Cerrar sesión?')) {
+    sessionStorage.removeItem('zidkenu_user');
+    window.location.href = 'login.html';
+  }
+}
+</script>
+<button type="button" class="btn-feedback">Feedback</button>
+</body>
+</html>
