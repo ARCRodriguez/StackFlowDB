@@ -556,7 +556,7 @@ function renderTable(){
 function goToDetalle(tareaId) {
   window.location.href = `detalle_tarea.html?id=${encodeURIComponent(tareaId)}&from=${encodeURIComponent(PAGE_FILE)}`;
 }
-function logout(){ DB.clearSession(); window.location.href='login.html'; }
+function logout(){ DB.clearSession(); location.reload(); }
 </script>
 </body>
 </html>

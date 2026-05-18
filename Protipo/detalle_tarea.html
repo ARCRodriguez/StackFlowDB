@@ -328,7 +328,7 @@ function rechazarTarea(prioridad) {
   DB.rechazarTarea(tareaId, prioridad, texto, session.id);
   window.location.href = vistaVolver(session.rol);
 }
-function logout() { DB.clearSession(); window.location.href = 'login.html'; }
+function logout() { DB.clearSession(); location.reload(); }
 
 document.addEventListener('DOMContentLoaded', () => {
   session = DB.requireSession(['admin', 'directivo', 'supervisor']);

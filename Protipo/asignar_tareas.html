@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('user-name').textContent = session.nombre;
   document.getElementById('user-dot').className = 'user-dot dot-' + session.rol;
   const vistaMap = {admin:'vista_admin.html',directivo:'vista_directivo.html'};
-  document.getElementById('btn-vista').href = vistaMap[session.rol]||'login.html';
+  document.getElementById('btn-vista').href = vistaMap[session.rol]||'vista_admin.html';
   document.getElementById('f-inicio').value = new Date().toISOString().split('T')[0];
   populateEmpresas();
   populateContadores();
@@ -597,7 +597,7 @@ function showToast(msg,tipo='info'){
   t.textContent=msg; t.className='toast show '+tipo;
   setTimeout(()=>t.className='toast',3000);
 }
-function logout(){ DB.clearSession(); window.location.href='login.html'; }
+function logout(){ DB.clearSession(); location.reload(); }
 </script>
 </body>
 </html>

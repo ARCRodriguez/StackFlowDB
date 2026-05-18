@@ -43,12 +43,46 @@ const DB = {
   clearSession() {
     localStorage.removeItem('cf_session');
   },
-  requireSession(rolesPermitidos) {
-    const u = this.getSession();
-    if (!u) { window.location.href = 'login.html'; return null; }
-    if (rolesPermitidos && !rolesPermitidos.includes(u.rol)) {
-      window.location.href = 'login.html'; return null;
+
+  /** Resuelve usuario sin pantalla de login (URL ?rol= ?usuario= ?uid= o primer rol permitido). */
+  _resolveUsuario(rolesPermitidos) {
+    const params = new URLSearchParams(window.location.search);
+    const usuarios = this.getUsuarios();
+    const allowed = rolesPermitidos?.length ? rolesPermitidos : null;
+    const ok = u => u && (!allowed || allowed.includes(u.rol));
+
+    const idParam = params.get('uid') || params.get('id');
+    if (idParam) {
+      const u = this.getUsuario(idParam);
+      if (ok(u)) return u;
     }
+    const nombreParam = params.get('usuario') || params.get('user');
+    if (nombreParam) {
+      const u = this.getUsuarioByNombre(nombreParam);
+      if (ok(u)) return u;
+    }
+    const rolParam = params.get('rol');
+    if (rolParam) {
+      const u = usuarios.find(x => x.rol === rolParam);
+      if (ok(u)) return u;
+    }
+    if (allowed) {
+      for (const r of allowed) {
+        const u = usuarios.find(x => x.rol === r);
+        if (u) return u;
+      }
+    }
+    return usuarios[0] || null;
+  },
+
+  requireSession(rolesPermitidos) {
+    let u = this.getSession();
+    if (!u || (rolesPermitidos && !rolesPermitidos.includes(u.rol))) {
+      u = this._resolveUsuario(rolesPermitidos);
+      if (u) this.setSession(u);
+    }
+    if (!u) return null;
+    if (rolesPermitidos && !rolesPermitidos.includes(u.rol)) return null;
     return u;
   },
 

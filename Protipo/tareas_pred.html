@@ -333,7 +333,7 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/'/g,"&#39;")
           .replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-function logout() { DB.clearSession(); window.location.href='login.html'; }
+function logout() { DB.clearSession(); location.reload(); }
 </script>
 </body>
 </html>

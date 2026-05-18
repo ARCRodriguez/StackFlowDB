@@ -797,7 +797,7 @@ function closeDetailPanel(){
 function closeDetail(e){
   if(e.target===document.getElementById('detail-overlay')) closeDetailPanel();
 }
-function logout(){ DB.clearSession(); window.location.href='login.html'; }
+function logout(){ DB.clearSession(); location.reload(); }
 </script>
 </body>
 </html>
