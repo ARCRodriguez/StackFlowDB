@@ -5,21 +5,22 @@
 
 const DEMO_USER = { email: 'admin@zidkenu.com', nombre: 'Alfredo García', rol: 'ADMIN' };
 
-// ── Módulo externo: asignar / reasignar empresa ─────────────────────────────
-// Cuando te pasen la ruta del otro módulo, pégala aquí (ej: '../asignacion/asignar_empresa.html')
-// Se enviará automáticamente ?id= con el ID de la empresa al hacer clic en el botón.
-const URL_MODULO_ASIGNAR_EMPRESA = '';
+// ── Módulo externo: Asignar contador y tareas ───────────────────────────────
+// Cuando te pasen la ruta, pégala aquí entre comillas, por ejemplo:
+// const URL_MODULO_ASIGNAR_CONTADOR_TAREAS = '../tareas/asignar_contador.html';
+// El listado enviará automáticamente ?id= con el ID de la empresa.
+const URL_MODULO_ASIGNAR_CONTADOR_TAREAS = '';
 
-function urlAsignarEmpresa(empresaId) {
-  if (!URL_MODULO_ASIGNAR_EMPRESA) return null;
-  const sep = URL_MODULO_ASIGNAR_EMPRESA.includes('?') ? '&' : '?';
-  return `${URL_MODULO_ASIGNAR_EMPRESA}${sep}id=${empresaId}`;
+function urlAsignarContadorTareas(empresaId) {
+  if (!URL_MODULO_ASIGNAR_CONTADOR_TAREAS) return null;
+  const sep = URL_MODULO_ASIGNAR_CONTADOR_TAREAS.includes('?') ? '&' : '?';
+  return `${URL_MODULO_ASIGNAR_CONTADOR_TAREAS}${sep}id=${empresaId}`;
 }
 
-function irAsignarEmpresa(empresaId) {
-  const url = urlAsignarEmpresa(empresaId);
+function irAsignarContadorTareas(empresaId) {
+  const url = urlAsignarContadorTareas(empresaId);
   if (!url) {
-    toast('Módulo de asignación aún no configurado', 'info');
+    toast('Módulo «Asignar contador y tareas» aún no configurado', 'info');
     return;
   }
   window.location.href = url;
