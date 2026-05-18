@@ -293,7 +293,7 @@ const rolConfig = {
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
         iconBg:"linear-gradient(135deg,#013657,#0A2041)", title:"Módulo de Empresas",
         desc:"Gestiona la cartera de empresas, asigna contadores y crea las tareas correspondientes.",
-        access:"Acceso completo", type:"full", href:"modulo_empresas.html" },
+        access:"Acceso completo", type:"full", href:"listado_empresa.html" },
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
         iconBg:"linear-gradient(135deg,#01ADF3,#01ADF3)", title:"Vista General de Tareas",
         desc:"Consulta el estado de todas las tareas del sistema organizadas por empresa y contador.",
@@ -303,17 +303,17 @@ const rolConfig = {
         desc:"Revisa y aprueba las tareas de alto nivel que esperan tu validación directiva.",
         access:"Validación directivo", type:"validacion", href:"vista_directivo.html" },
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
-        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Dashboard BI",
+        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Estadisticas",
         desc:"Indicadores de desempeño, porcentajes de cumplimiento y métricas avanzadas del equipo.",
-        access:"Analítica BI", type:"bi", href:"dashboard_bi.html" },
+        access:"Analítica", type:"bi", href:"dashboard_bi.html" },
     ],
     nav: () => [
       { label:"Dashboard",            icon:homeIcon,     active:true, href:'#' },
       { section:"Módulos" },
-      { label:"Módulo de Empresas",   icon:buildingIcon, href:'modulo_empresas.html' },
+      { label:"Módulo de Empresas",   icon:buildingIcon, href:'listado_empresa.html' },
       { label:"Vista General Tareas", icon:taskIcon,     href:'vista_admin.html' },
       { label:"Tareas en Validación", icon:checkIcon,    href:'vista_directivo.html' },
-      { label:"Dashboard BI",         icon:chartIcon,    href:'dashboard_bi.html' },
+      { label:"Estadisticas",         icon:chartIcon,    href:'dashboard_bi.html' },
     ]
   },
 
@@ -338,7 +338,7 @@ const rolConfig = {
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
         iconBg:"linear-gradient(135deg,#013657,#0A2041)", title:"Módulo de Empresas",
         desc:"Control total de empresas: crear, asignar contadores y gestionar la cartera.",
-        access:"Acceso completo", type:"full", href:"modulo_empresas.html" },
+        access:"Acceso completo", type:"full", href:"listado_empresa.html" },
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
         iconBg:"linear-gradient(135deg,#059669,#01ADF3)", title:"Validación Supervisores",
         desc:"Tareas que están pendientes de validación por parte de los supervisores.",
@@ -352,9 +352,9 @@ const rolConfig = {
         desc:"Crea cuentas, asigna roles y administra todos los usuarios del sistema.",
         access:"Acceso completo", type:"admin", href:"admin_usuarios.html" },
       { icon:`<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
-        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Dashboard BI",
+        iconBg:"linear-gradient(135deg,#6366f1,#013657)", title:"Estadistica",
         desc:"Indicadores clave de desempeño, porcentajes y análisis avanzado de la organización.",
-        access:"Analítica BI", type:"bi", href:"dashboard_bi.html" },
+        access:"Analítica", type:"bi", href:"dashboard_bi.html" },
     ],
     nav: () => [
       { label:"Dashboard",              icon:homeIcon,     active:true, href:'#' },
@@ -363,10 +363,10 @@ const rolConfig = {
       { label:"Validación Supervisores",icon:checkIcon,    href:'vista_supervisor.html' },
       { label:"Validación Directivos",  icon:checkIcon,    href:'vista_directivo.html' },
       { section:"Empresas y Usuarios" },
-      { label:"Módulo de Empresas",     icon:buildingIcon, href:'modulo_empresas.html' },
+      { label:"Módulo de Empresas",     icon:buildingIcon, href:'listado_empresa.html' },
       { label:"Gestión de Usuarios",    icon:usersIcon,    href:'admin_usuarios.html' },
       { section:"Analítica" },
-      { label:"Dashboard BI",           icon:chartIcon,    href:'dashboard_bi.html' },
+      { label:"Estadisticas",           icon:chartIcon,    href:'dashboard_bi.html' },
     ]
   }
 };
@@ -500,6 +500,119 @@ function logout() {
   }
 }
 </script>
-<button type="button" class="btn-feedback">Feedback</button>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER BAR — Zidkenu TaskFlow
+     ══════════════════════════════════════════════ -->
+
+<!-- Empuja el contenido para que no quede oculto -->
+<div style="height:52px"></div>
+
+<!-- FOOTER BAR -->
+<div id="footerBar" style="
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  height:52px;
+  background:var(--navy);
+  border-top:1px solid rgba(1,173,243,.18);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  box-shadow:0 -2px 16px rgba(10,32,65,.25);
+">
+  <!-- IZQUIERDA: Ir al Dashboard -->
+  <div style="position:relative">
+    <button id="btnDashToggle" onclick="toggleDashMenu()" style="
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 16px;border-radius:8px;border:1.5px solid rgba(1,173,243,.35);
+      background:rgba(1,173,243,.1);color:var(--sky);
+      font-size:12px;font-weight:700;cursor:pointer;
+      transition:.15s;letter-spacing:.3px;
+    "
+    onmouseover="this.style.background='rgba(1,173,243,.2)'"
+    onmouseout="this.style.background='rgba(1,173,243,.1)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Dashboard
+      <svg id="dashChevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform .2s"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <!-- Menú desplegable -->
+    <div id="dashMenu" style="
+      display:none;position:absolute;bottom:calc(100% + 8px);left:0;
+      background:var(--navy);border:1.5px solid rgba(1,173,243,.25);
+      border-radius:10px;min-width:210px;
+      box-shadow:0 -8px 24px rgba(10,32,65,.4);
+      overflow:hidden;z-index:400;
+    ">
+      <div style="padding:8px 14px 6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.08)">
+        Ir a módulo
+      </div>
+
+      <a href="dashboard.html" onclick="irDashboard(event,'dashboard.html')" style="
+        display:flex;align-items:center;gap:10px;padding:11px 16px;
+        color:rgba(255,255,255,.85);font-size:13px;text-decoration:none;
+        transition:.15s;border-bottom:1px solid rgba(255,255,255,.06);
+      "
+      onmouseover="this.style.background='rgba(1,173,243,.15)';this.style.color='var(--sky)'"
+      onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,.85)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Inicio / Dashboard
+        <span style="margin-left:auto;font-size:10px;background:rgba(1,173,243,.2);color:var(--sky);padding:2px 7px;border-radius:10px;font-weight:700">INICIO</span>
+      </a>
+
+      <div style="padding:8px 16px 10px;font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+        Sesión activa — sin re-login
+      </div>
+    </div>
+  </div>
+
+  <!-- DERECHA: Feedback -->
+  <button id="btnFeedback" onclick="fwOpen()" style="
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);
+  background:transparent;color:rgba(255,255,255,.6);
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:.15s;letter-spacing:.3px;
+"
+onmouseover="this.style.borderColor='rgba(1,173,243,.5)';this.style.color='var(--sky)';this.style.background='rgba(1,173,243,.08)'"
+onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.6)';this.style.background='transparent'">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+  </svg>
+  Feedback
+</button>
+</div>
+
+<script>
+function toggleDashMenu() {
+  const menu    = document.getElementById('dashMenu');
+  const chevron = document.getElementById('dashChevron');
+  const open    = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+document.addEventListener('click', function(e) {
+  const toggle = document.getElementById('btnDashToggle');
+  const menu   = document.getElementById('dashMenu');
+
+  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+
+    const chevron = document.getElementById('dashChevron');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+  }
+});
+
+function irDashboard(event, url) {
+  event.preventDefault();
+  window.location.href = url;
+}
+</script>
+
 </body>
 </html>
