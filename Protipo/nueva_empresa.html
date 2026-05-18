@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nuevo Cliente — Zidkenu TaskFlow</title>
+<link rel="stylesheet" href="zidkenu_style.css"/>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a class="logo" href="listado_empresa.html">
+    <div class="logo-mark">Z</div>
+    <div class="logo-text">Zidkenu <em>TaskFlow</em></div>
+  </a>
+  <div class="top-user">
+    <span class="top-badge" id="topRol">ADMIN</span>
+    <div class="avatar" id="topAv">A</div>
+    <span style="color:var(--silver);font-size:13px" id="topName">Usuario</span>
+    <button class="btn btn-ghost btn-sm" style="margin-left:8px;border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:11px" onclick="doLogout()">Salir</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section">Módulo Clientes</div>
+    <a class="nav-item" href="listado_empresa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+      Listado de clientes
+    </a>
+    <a class="nav-item active" href="nueva_empresa.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Nuevo cliente
+    </a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="ph">
+      <p class="page-name">Creación de Empresa</p>
+      <div class="ph-title"><div class="ph-bar"></div>Nuevo cliente</div>
+      <div class="ph-sub">Registra una nueva empresa en la cartera de Zidkenu</div>
+    </div>
+
+    <div class="card">
+
+      <!-- Sec 1: Datos empresa -->
+      <div class="fsec">
+        <div class="fsec-title">Datos de la empresa</div>
+        <div class="frow">
+          <div class="fg">
+            <label>Razón social <span class="req">*</span></label>
+            <input id="f_razon" type="text" placeholder="Ej: Textilería San Marcos S.A.C."/>
+          </div>
+          <div class="fg">
+            <label>RUC <span class="req">*</span></label>
+            <input id="f_ruc" type="text" maxlength="11" placeholder="11 dígitos" oninput="chkRuc(this)"/>
+            <span class="hint" id="hRuc">Ingresa exactamente 11 dígitos</span>
+          </div>
+          <div class="fg">
+            <label>Tipo de persona <span class="req">*</span></label>
+            <select id="f_tipo" onchange="updateInfo()">
+              <option value="">Seleccionar...</option>
+              <option value="NATURAL">Persona Natural</option>
+              <option value="JURIDICA">Persona Jurídica</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Estado</label>
+            <select id="f_estado">
+              <option value="ACTIVO">Activo</option>
+              <option value="INACTIVO">Inactivo</option>
+              <option value="SUSPENDIDO">Suspendido</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sec 2: Origen / Régimen -->
+      <div class="fsec">
+        <div class="fsec-title">Origen tributario</div>
+        <div class="frow">
+          <div class="fg">
+            <label>¿Cómo llega la empresa? <span class="req">*</span></label>
+            <select id="f_origen" onchange="toggleOrigen()">
+              <option value="">Seleccionar...</option>
+              <option value="NUEVO">Empresa nueva (recién constituida)</option>
+              <option value="OTRO_CONTADOR">Viene de otro contador</option>
+            </select>
+          </div>
+          <div class="fg" id="grpReg" style="display:none">
+            <label>Régimen tributario <span class="req">*</span></label>
+            <select id="f_regimen" onchange="updateInfo()">
+              <option value="">Seleccionar...</option>
+              <option value="RUS">RUS / NRUS</option>
+              <option value="RER">RER</option>
+              <option value="MYPE">MYPE (Micro y Pequeña Empresa)</option>
+              <option value="GENERAL">Régimen General</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-pill" id="infoPill"></div>
+        <div id="grpUit" style="display:none;margin-top:12px">
+          <div class="fg" style="max-width:420px">
+            <label>¿Supera los 300 UIT anuales?</label>
+            <select id="f_uit">
+              <option value="0">No — ≤ 300 UIT → Libro Diario Simplificado</option>
+              <option value="1">Sí — &gt; 300 UIT → Libro Diario + Libro Mayor</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sec 3: Representante -->
+      <div class="fsec">
+        <div class="fsec-title">Representante / Contacto principal</div>
+        <div class="frow">
+          <div class="fg">
+            <label>Nombre completo <span class="req">*</span></label>
+            <input id="f_repNom" type="text" placeholder="Nombre del representante o titular"/>
+          </div>
+          <div class="fg">
+            <label>DNI <span class="req">*</span></label>
+            <input id="f_repDni" type="text" maxlength="8" placeholder="8 dígitos"/>
+          </div>
+          <div class="fg">
+            <label>Cargo</label>
+            <input id="f_repCargo" type="text" placeholder="Ej: Gerente General"/>
+          </div>
+          <div class="fg">
+            <label>Teléfono</label>
+            <input id="f_repTel" type="text" placeholder="Ej: 999 123 456"/>
+          </div>
+          <div class="fg" style="grid-column:1/-1">
+            <label>Correo electrónico del representante</label>
+            <input id="f_repEmail" type="email" placeholder="representante@empresa.com"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sec 4: Contacto secundario -->
+      <div class="fsec">
+        <div class="fsec-title">Contacto secundario</div>
+        <p class="hint" style="margin:-4px 0 14px">Persona distinta al titular que representa a la empresa ante SUNAT, bancos u otras gestiones (apoderado, contador externo, etc.).</p>
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:14px;cursor:pointer;font-size:13px;color:var(--text)">
+          <input type="checkbox" id="f_secActivo" onchange="toggleSecundario()"/>
+          Agregar contacto secundario
+        </label>
+        <div id="grpSec" style="display:none">
+          <div class="frow">
+            <div class="fg">
+              <label>Nombre completo <span class="req">*</span></label>
+              <input id="f_secNom" type="text" placeholder="Ej: María López Vargas"/>
+            </div>
+            <div class="fg">
+              <label>DNI <span class="req">*</span></label>
+              <input id="f_secDni" type="text" maxlength="8" placeholder="8 dígitos"/>
+            </div>
+            <div class="fg">
+              <label>Cargo / relación</label>
+              <input id="f_secCargo" type="text" placeholder="Ej: Representante legal, Apoderado"/>
+            </div>
+            <div class="fg">
+              <label>Teléfono</label>
+              <input id="f_secTel" type="text" placeholder="Ej: 999 123 456"/>
+            </div>
+            <div class="fg" style="grid-column:1/-1">
+              <label>Correo electrónico</label>
+              <input id="f_secEmail" type="email" placeholder="contacto@empresa.com"/>
+            </div>
+          </div>
+        </div>
+        <div class="frow" style="margin-top:12px">
+          <div class="fg" style="grid-column:1/-1">
+            <label>Observaciones</label>
+            <textarea id="f_obs" placeholder="Notas internas, particularidades del cliente..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px">
+        <button class="btn btn-ghost" onclick="limpiar()">🗑 Limpiar</button>
+        <a class="btn btn-ghost" href="listado_empresa.html">← Cancelar</a>
+        <button class="btn btn-primary" onclick="guardar()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Guardar cliente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="zidkenu_data.js"></script>
+<script>
+const user = checkSession();
+renderTopbar(user);
+const s = id => document.getElementById(id);
+const v = id => s(id)?.value?.trim() || '';
+
+function toggleOrigen() {
+  const ori = v('f_origen');
+  s('grpReg').style.display = ori === 'OTRO_CONTADOR' ? '' : 'none';
+  s('grpUit').style.display = 'none';
+  const p = s('infoPill');
+  if (ori === 'NUEVO') { p.textContent = INFO_TRIB.NUEVO; p.classList.add('show'); }
+  else if (!ori) { p.classList.remove('show'); }
+  else updateInfo();
+}
+
+function updateInfo() {
+  const reg  = v('f_regimen');
+  const tipo = v('f_tipo');
+  if (!reg) return;
+  s('grpUit').style.display = reg === 'MYPE' ? '' : 'none';
+  let key = reg;
+  if (reg === 'RER')  key = tipo === 'JURIDICA' ? 'RER_JURIDICA'  : 'RER_NATURAL';
+  if (reg === 'MYPE') key = tipo === 'JURIDICA' ? 'MYPE_JURIDICA' : 'MYPE_NATURAL';
+  const p = s('infoPill');
+  p.textContent = INFO_TRIB[key] || INFO_TRIB[reg] || '';
+  p.classList.add('show');
+}
+
+function chkRuc(inp) {
+  inp.value = inp.value.replace(/\D/g, '');
+  const h = s('hRuc');
+  if (inp.value.length === 11) { h.textContent = '✅ Formato correcto'; h.className = 'hint ok'; }
+  else { h.textContent = `${inp.value.length}/11 dígitos`; h.className = 'hint bad'; }
+}
+
+function toggleSecundario() {
+  const on = s('f_secActivo').checked;
+  s('grpSec').style.display = on ? '' : 'none';
+  if (!on) ['f_secNom','f_secDni','f_secCargo','f_secTel','f_secEmail'].forEach(id => s(id) && (s(id).value = ''));
+}
+
+function guardar() {
+  const razon  = v('f_razon'), ruc = v('f_ruc'), tipo = v('f_tipo');
+  const origen = v('f_origen'), reg = v('f_regimen');
+  const repNom = v('f_repNom'), repDni = v('f_repDni');
+  const secOn  = s('f_secActivo').checked;
+  const secNom = v('f_secNom'), secDni = v('f_secDni');
+
+  const errs = [];
+  if (!razon)                               errs.push('f_razon');
+  if (ruc.length !== 11)                    errs.push('f_ruc');
+  if (!tipo)                                errs.push('f_tipo');
+  if (!origen)                              errs.push('f_origen');
+  if (origen === 'OTRO_CONTADOR' && !reg)   errs.push('f_regimen');
+  if (!repNom)                              errs.push('f_repNom');
+  if (repDni.length !== 8)                  errs.push('f_repDni');
+  if (secOn && !secNom)                     errs.push('f_secNom');
+  if (secOn && secDni.length !== 8)         errs.push('f_secDni');
+
+  document.querySelectorAll('.fg input, .fg select').forEach(el => el.classList.remove('err'));
+  if (errs.length) { errs.forEach(id => s(id)?.classList.add('err')); toast('Completa todos los campos obligatorios ✱', 'err'); return; }
+
+  const lista = getEmpresas();
+  if (lista.find(e => e.ruc === ruc)) { s('f_ruc').classList.add('err'); toast(`El RUC ${ruc} ya está registrado`, 'err'); return; }
+
+  lista.push({
+    id: nextId(), razon, ruc, tipo, origen,
+    regimen: origen === 'OTRO_CONTADOR' ? reg : null,
+    uit: v('f_uit'), estado: v('f_estado'), contador: '',
+    repNom, repDni, repCargo: v('f_repCargo'), repTel: v('f_repTel'), repEmail: v('f_repEmail'),
+    secNom: secOn ? secNom : '', secDni: secOn ? secDni : '', secCargo: secOn ? v('f_secCargo') : '',
+    secTel: secOn ? v('f_secTel') : '', secEmail: secOn ? v('f_secEmail') : '',
+    obs: v('f_obs'),
+  });
+  saveEmpresas(lista);
+  toast(`✅ Cliente "${razon}" registrado`, 'ok');
+  setTimeout(() => { window.location.href = 'listado_empresa.html'; }, 1200);
+}
+
+function limpiar() {
+  ['f_razon','f_ruc','f_repNom','f_repDni','f_repCargo','f_repTel','f_repEmail','f_secNom','f_secDni','f_secCargo','f_secTel','f_secEmail','f_obs'].forEach(id => s(id) && (s(id).value = ''));
+  ['f_tipo','f_origen','f_regimen','f_estado','f_uit'].forEach(id => { const el = s(id); if(el) el.selectedIndex = 0; });
+  s('f_secActivo').checked = false;
+  s('f_estado').value = 'ACTIVO';
+  s('grpReg').style.display = 'none'; s('grpUit').style.display = 'none'; s('grpSec').style.display = 'none';
+  s('infoPill').classList.remove('show');
+  s('hRuc').textContent = 'Ingresa exactamente 11 dígitos'; s('hRuc').className = 'hint';
+  document.querySelectorAll('.fg input,.fg select').forEach(el => el.classList.remove('err'));
+}
+</script>
+</body>
+</html>
