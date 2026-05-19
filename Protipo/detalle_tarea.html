@@ -3,117 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ContaFlow — Detalle de Tarea</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy:#1d1656; --blue1:#004aad; --blue2:#0041ff; --cyan:#289dd2;
-  --white:#ffffff; --gray50:#f8f9fc; --gray100:#eef1f7; --gray200:#dce2f0;
-  --gray300:#c4cad8; --gray500:#7a84a0; --gray700:#3d4460; --text:#1a1f36;
-  --radius:10px; --radius-lg:14px;
-  --shadow:0 2px 12px rgba(29,22,86,.08);
-  --c-asignado:#004aad; --c-proceso:#7c3aed; --c-validacion:#eab308;
-  --c-completado:#16a34a; --c-porvencer:#f97316; --c-vencido:#dc2626;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Roboto',sans-serif;background:var(--gray50);color:var(--text);min-height:100vh;}
+<title>Zidkenu — Detalle de Tarea</title>
+<link rel="stylesheet" href="zidkenu_style.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-.topbar{background:var(--white);border-bottom:1px solid var(--gray100);height:60px;
-  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
-  position:sticky;top:0;z-index:300;box-shadow:var(--shadow);}
-.topbar-left{display:flex;align-items:center;gap:16px;}
-.topbar-logo{font-size:19px;font-weight:700;color:var(--navy);}
-.topbar-logo span{color:var(--cyan);}
-.topbar-sep{width:1px;height:24px;background:var(--gray200);}
-.topbar-page{font-size:14px;font-weight:500;color:var(--gray700);}
-.topbar-right{display:flex;align-items:center;gap:12px;}
-.user-chip{display:flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;
-  background:var(--gray50);border:1px solid var(--gray100);font-size:13px;font-weight:500;color:var(--gray700);}
-.udot{width:9px;height:9px;border-radius:50%;}
-.udot-admin{background:var(--blue1);}
-.udot-directivo{background:#1a56db;}
-.udot-supervisor{background:#0d9488;}
-.btn-nav{padding:7px 16px;border-radius:var(--radius);border:1px solid var(--gray200);
-  background:var(--white);color:var(--gray700);font-family:'Roboto',sans-serif;
-  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;
-  display:inline-flex;align-items:center;gap:6px;}
-.btn-nav:hover{border-color:var(--blue1);color:var(--blue1);}
-.btn-logout{padding:7px 16px;border-radius:var(--radius);border:none;
-  background:var(--gray50);color:var(--gray500);font-family:'Roboto',sans-serif;
-  font-size:13px;cursor:pointer;transition:all .2s;}
-.btn-logout:hover{background:#fff1f0;color:#dc2626;}
-
-.content{padding:28px;max-width:720px;margin:0 auto;}
-.back-row{margin-bottom:20px;}
-.page-title{font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.3px;line-height:1.3;}
-.detail-card{background:var(--white);border:1px solid var(--gray100);border-radius:var(--radius-lg);
-  box-shadow:var(--shadow);padding:24px 28px;display:flex;flex-direction:column;gap:22px;}
-
-.dsec{display:flex;flex-direction:column;gap:6px;}
-.dsec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
-  color:var(--gray500);padding-bottom:6px;border-bottom:1px solid var(--gray100);}
-.drow{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:6px 0;border-bottom:1px solid var(--gray50);}
-.drow:last-child{border-bottom:none;}
-.drow-label{font-size:13px;color:var(--gray500);font-weight:500;flex-shrink:0;margin-right:12px;}
-.drow-value{font-size:13px;color:var(--text);font-weight:500;text-align:right;}
-.drow-value.pending{color:var(--gray300);font-style:italic;font-weight:400;}
-
-.estado-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;
-  border-radius:20px;font-size:13px;font-weight:600;}
-.eb-asignado{background:#eef3ff;color:var(--c-asignado);}
-.eb-en_proceso{background:#f3eeff;color:var(--c-proceso);}
-.eb-en_validacion{background:#fefce8;color:#a16207;}
-.eb-completado{background:#f0fdf4;color:var(--c-completado);}
-.eb-por_vencer{background:#fff7ed;color:var(--c-porvencer);}
-.eb-vencido{background:#fff1f0;color:var(--c-vencido);}
-.sdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.sdot.asignado{background:var(--c-asignado);box-shadow:0 0 6px var(--c-asignado);}
-.sdot.en_proceso{background:var(--c-proceso);box-shadow:0 0 6px var(--c-proceso);}
-.sdot.en_validacion{background:var(--c-validacion);box-shadow:0 0 6px var(--c-validacion);}
-.sdot.completado{background:var(--c-completado);box-shadow:0 0 6px var(--c-completado);}
-
-.desc-box{background:var(--gray50);border:1px solid var(--gray100);border-radius:var(--radius);
-  padding:12px 14px;font-size:14px;color:var(--gray700);line-height:1.65;}
-.desc-empty{color:var(--gray300);font-style:italic;font-size:13px;}
-
-.hist-item{display:flex;align-items:center;gap:8px;padding:6px 0;
-  border-bottom:1px solid var(--gray50);font-size:12px;color:var(--gray700);}
-.hist-item:last-child{border-bottom:none;}
-.comment-item{padding:10px 12px;border-radius:var(--radius);border:1px solid var(--gray100);
-  margin-bottom:8px;font-size:13px;}
-.comment-item.observacion_alta{border-color:#fca5a5;background:#fff1f0;}
-.comment-item.observacion_media{border-color:#fde68a;background:#fffbeb;}
-.comment-meta{font-size:11px;color:var(--gray500);margin-top:5px;}
-</style>
+<script>
+window.ZK_PAGE = { activePage: 'detalle_tarea', pageTitle: 'Detalle de Tarea', pageSubtitle: 'Información y acciones de la tarea seleccionada.' };
+</script>
 </head>
-<body>
+<body class="zk-app zk-tareas">
 
-<div class="topbar">
-  <div class="topbar-left">
-    <span class="topbar-logo">Conta<span>Flow</span></span>
-    <span class="topbar-sep"></span>
-    <span class="topbar-page">Detalle de tarea</span>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="dashboard.html" class="sidebar-brand-link">
+      <img src="zidkenulogohorizontal.png" alt="Zidkenu Soluciones Empresariales" class="sidebar-logo-img">
+    </a>
   </div>
-  <div class="topbar-right">
-    <div class="user-chip">
-      <span class="udot" id="udot"></span>
-      <span id="uname">—</span>
+  <div class="sidebar-user-info">
+    <div class="user-avatar" id="sidebarAvatar">—</div>
+    <div class="user-name-side" id="sidebarName">—</div>
+    <span class="role-badge" id="sidebarRoleBadge">—</span>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <button type="button" class="logout-btn" onclick="ZK.logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      Cerrar sesión
+    </button>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="app-topbar">
+    <div class="topbar-left">
+      <h1 id="zkPageTitle">Detalle de Tarea</h1>
+      <p id="zkPageSubtitle">Información y acciones de la tarea seleccionada.</p>
     </div>
-    <button class="btn-logout" onclick="logout()">Salir</button>
+    <div class="topbar-right">
+      <div class="zk-topbar-actions" id="zkTopbarExtra"></div>
+      <span class="topbar-date" id="currentDate">—</span>
+    </div>
   </div>
-</div>
-
-<div class="content">
-  <div class="back-row">
+  <div class="page-content zk-page-content">
+<div class="back-row">
     <a class="btn-nav" id="btn-volver" href="vista_supervisor.html">← Volver a Vista General</a>
   </div>
   <h1 class="page-title" id="page-title">—</h1>
   <div class="detail-card" id="detail-body" style="margin-top:20px;"></div>
-</div>
+
+  </div>
+</main>
 
 <script src="db.js"></script>
+<script src="zidkenu_shell.js"></script>
 <script>
 const VISTA_POR_ROL = {
   admin: 'vista_admin.html',
@@ -185,7 +127,7 @@ function renderDetalle() {
   const comentarios = DB.getComentariosByTarea(tareaId);
 
   document.getElementById('page-title').textContent = tarea.nombre;
-  document.title = 'ContaFlow — ' + tarea.nombre;
+  document.title = 'Zidkenu — ' + tarea.nombre;
 
   const estadoLabels = {
     asignado: 'Asignado', en_proceso: 'En Proceso', en_validacion: 'En Validación',
@@ -337,12 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = vistaVolver(session?.rol || 'supervisor');
     return;
   }
-  document.getElementById('uname').textContent = session.nombre;
-  document.getElementById('udot').className = 'udot udot-' + session.rol;
+  const nameEl = document.getElementById('sidebarName');
+  if (nameEl) nameEl.textContent = session.nombre;
   const volver = document.getElementById('btn-volver');
   volver.href = vistaVolver(session.rol);
   renderDetalle();
 });
 </script>
+<script src="footer_nav.js"></script>
 </body>
 </html>
