@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ContaFlow — Asignar Tareas</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="zidkenu_style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zidkenu — Asignar Tareas</title>
+<link rel="stylesheet" href="zidkenu_style.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+window.ZK_PAGE = { activePage: 'asignar_tareas', pageTitle: 'Asignar Tareas', pageSubtitle: 'Asigna empresas, contadores y bloques de tareas.' };
+</script>
 </head>
+<body class="zk-app zk-tareas">
 
-<body>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="dashboard.html" class="sidebar-brand-link">
+      <img src="zidkenulogohorizontal.png" alt="Zidkenu Soluciones Empresariales" class="sidebar-logo-img">
+    </a>
+  </div>
+  <div class="sidebar-user-info">
+    <div class="user-avatar" id="sidebarAvatar">—</div>
+    <div class="user-name-side" id="sidebarName">—</div>
+    <span class="role-badge" id="sidebarRoleBadge">—</span>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <button type="button" class="logout-btn" onclick="ZK.logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      Cerrar sesión
+    </button>
+  </div>
+</nav>
 
-  <div class="topbar">
+<main class="main-content">
+  <div class="app-topbar">
     <div class="topbar-left">
-      <span class="topbar-logo">Conta<span>Flow</span></span>
-      <span class="topbar-sep"></span>
-      <span class="topbar-page">Asignar Tareas</span>
+      <h1 id="zkPageTitle">Asignar Tareas</h1>
+      <p id="zkPageSubtitle">Asigna empresas, contadores y bloques de tareas.</p>
     </div>
     <div class="topbar-right">
-      <div class="user-chip">
-        <span class="user-dot" id="user-dot"></span>
-        <span id="user-name">—</span>
-      </div>
-      <a class="btn-nav" href="tareas_pred.html">⚙ Tareas predeterminadas</a>
-      <a class="btn-nav" id="btn-vista" href="#">📊 Vista General</a>
-      <button class="btn-logout" onclick="logout()">Salir</button>
+      <div class="zk-topbar-actions" id="zkTopbarExtra"><a class="zk-btn-nav" href="tareas_pred.html">⚙ Tareas predeterminadas</a><a class="zk-btn-nav" id="btn-vista" href="#">📊 Vista General</a></div>
+      <span class="topbar-date" id="currentDate">—</span>
     </div>
   </div>
-
-  <div class="page-layout">
-
-    <!-- FORMULARIO -->
+  <div class="page-content zk-page-content">
+<div class="page-layout"><!-- FORMULARIO -->
     <div>
       <div class="card">
         <div class="card-header">
@@ -159,7 +173,11 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="db.js"></script>
+  </div>
+</main>
+
+<script src="db.js"></script>
+<script src="zidkenu_shell.js"></script>
   <script>
     let session = null;
     let bloques = { anual: false, mensual: false, general: false };
@@ -168,15 +186,26 @@
     document.addEventListener('DOMContentLoaded', () => {
       session = DB.requireSession(['admin', 'directivo']);
       if (!session) return;
-      document.getElementById('user-name').textContent = session.nombre;
-      document.getElementById('user-dot').className = 'user-dot dot-' + session.rol;
-      const vistaMap = { admin: 'vista_admin.html', directivo: 'vista_directivo.html' };
-      document.getElementById('btn-vista').href = vistaMap[session.rol] || 'vista_admin.html';
-      document.getElementById('f-inicio').value = new Date().toISOString().split('T')[0];
+      const nameEl = document.getElementById('sidebarName');
+      if (nameEl) nameEl.textContent = session.nombre;
+      const btnVista = document.getElementById('btn-vista');
+      if (btnVista) {
+        const vistaMap = { admin: 'vista_admin.html', directivo: 'vista_directivo.html' };
+        btnVista.href = vistaMap[session.rol] || 'vista_admin.html';
+      }
+      const fInicio = document.getElementById('f-inicio');
+      if (fInicio) fInicio.value = new Date().toISOString().split('T')[0];
       populateEmpresas();
       populateContadores();
-      renderRecientes();
+      scheduleInitAsignar();
     });
+
+    function scheduleInitAsignar() {
+      const run = () => renderRecientes();
+      run();
+      setTimeout(run, 0);
+    }
+    window.addEventListener('pageshow', () => { if (session) renderRecientes(); });
 
     function populateEmpresas() {
       const sel = document.getElementById('f-empresa');
@@ -415,8 +444,7 @@
     }
     function logout() { DB.clearSession(); location.reload(); }
   </script>
-  <button type="button" class="btn-feedback"
-    onclick="window.location.href='c:\\Users\\jire_\\OneDrive\\Escritorio\\TaskFlow\\Encuestas\\encuesta_v2.html'">Feedback</button>
+<script src="footer_nav.js"></script>
 </body>
 
 </html>
