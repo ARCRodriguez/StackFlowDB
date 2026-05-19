@@ -12,12 +12,7 @@
 
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-      </svg>
-    </div>
-    <span class="brand-text">Zid<span>kenu</span></span>
+    <img src="zidkenulogohorizontal.png" alt="Zidkenu" style="max-height:40px; width:auto; display:block;">
   </div>
   <div class="sidebar-user-info">
     <div class="user-avatar" id="sidebarAvatar"></div>
@@ -501,7 +496,37 @@ function logout() {
 }
 </script>
 
-<!-- ══════════════════════════════════════════════
+
+<script>
+function toggleDashMenu() {
+  const menu    = document.getElementById('dashMenu');
+  const chevron = document.getElementById('dashChevron');
+  const open    = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+document.addEventListener('click', function(e) {
+  const toggle = document.getElementById('btnDashToggle');
+  const menu   = document.getElementById('dashMenu');
+
+  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+
+    const chevron = document.getElementById('dashChevron');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+  }
+});
+
+function irDashboard(event, url) {
+  event.preventDefault();
+  window.location.href = url;
+}
+</script>
+
+</body>
+<footer>
+  <!-- ══════════════════════════════════════════════
      FOOTER BAR — Zidkenu TaskFlow
      ══════════════════════════════════════════════ -->
 
@@ -571,48 +596,7 @@ function logout() {
   </div>
 
   <!-- DERECHA: Feeedback -->
-  <button id="btnFeedback" onclick="fwOpen()" style="
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);
-  background:transparent;color:rgba(255,255,255,.6);
-  font-size:12px;font-weight:600;cursor:pointer;
-  transition:.15s;letter-spacing:.3px;
-"
-onmouseover="this.style.borderColor='rgba(1,173,243,.5)';this.style.color='var(--sky)';this.style.background='rgba(1,173,243,.08)'"
-onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.6)';this.style.background='transparent'">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-  </svg>
-  Feedback
-</button>
-</div>
-
-<script>
-function toggleDashMenu() {
-  const menu    = document.getElementById('dashMenu');
-  const chevron = document.getElementById('dashChevron');
-  const open    = menu.style.display === 'block';
-  menu.style.display = open ? 'none' : 'block';
-  chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
-}
-
-document.addEventListener('click', function(e) {
-  const toggle = document.getElementById('btnDashToggle');
-  const menu   = document.getElementById('dashMenu');
-
-  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
-    menu.style.display = 'none';
-
-    const chevron = document.getElementById('dashChevron');
-    if (chevron) chevron.style.transform = 'rotate(0deg)';
-  }
-});
-
-function irDashboard(event, url) {
-  event.preventDefault();
-  window.location.href = url;
-}
-</script>
-
-</body>
+  <button id="btnFeedback" onclick="window.location.href='encuesta_v2.html'" style=" display:inline-flex;align-items:center;gap:8px; padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15); background:transparent;color:rgba(255,255,255,.6); font-size:12px;font-weight:600;cursor:pointer; transition:.15s;letter-spacing:.3px; " onmouseover="this.style.borderColor='rgba(1,173,243,.5)';this.style.color='var(--sky)';this.style.background='rgba(1,173,243,.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.6)';this.style.background='transparent'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Feedback</button>
+</div> 
+</footer>
 </html>
