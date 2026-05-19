@@ -25,6 +25,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
+/* ── TOPBAAR ── */
     *,
     *::before,
     *::after {
@@ -1107,3 +1108,258 @@ body.zk-crud .btn-feedback{bottom:24px;left:24px}
   body.zk-login{flex-direction:column;overflow:auto}
   body.zk-login .left-panel,body.zk-login .right-panel{width:100%}
 }
+
+/* Overlay */
+#fw-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 28px 90px;
+}
+#fw-overlay.open { display: flex; }
+
+/* Panel */
+#fw-panel {
+  width: 380px;
+  max-height: 80vh;
+  background: var(--fw-bg);
+  border: 1px solid var(--fw-border);
+  border-radius: var(--fw-radius);
+  box-shadow: var(--fw-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fw-slide .28s cubic-bezier(.22,.68,0,1.2) both;
+}
+@keyframes fw-slide {
+  from { opacity:0; transform: translateY(20px) scale(.97); }
+  to   { opacity:1; transform: translateY(0)   scale(1);    }
+}
+
+/* Header */
+#fw-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--fw-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+#fw-header-left h2 {
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fw-text);
+  letter-spacing: .03em;
+}
+#fw-header-left p {
+  font-size: 11.5px;
+  color: var(--fw-muted);
+  margin-top: 2px;
+}
+#fw-page-badge {
+  font-size: 10px;
+  background: rgba(79,124,255,.18);
+  color: var(--fw-accent);
+  border: 1px solid rgba(79,124,255,.3);
+  border-radius: 20px;
+  padding: 3px 9px;
+  white-space: nowrap;
+  margin-top: 4px;
+  display: inline-block;
+}
+#fw-close {
+  background: none;
+  border: none;
+  color: var(--fw-muted);
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  font-size: 20px;
+  transition: color .15s;
+}
+#fw-close:hover { color: var(--fw-text); }
+
+/* Progress */
+#fw-progress-bar {
+  height: 3px;
+  background: var(--fw-border);
+  position: relative;
+}
+#fw-progress-fill {
+  height: 100%;
+  background: var(--fw-accent);
+  transition: width .35s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Body */
+#fw-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--fw-border) transparent;
+}
+
+/* Pasos */
+.fw-step { display: none; }
+.fw-step.active { display: block; animation: fw-fade .2s ease both; }
+@keyframes fw-fade { from { opacity:0; transform: translateX(8px); } to { opacity:1; transform: none; } }
+
+.fw-step h3 {
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fw-text);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.fw-step-num {
+  display: inline-block;
+  background: rgba(79,124,255,.2);
+  color: var(--fw-accent);
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  text-align: center; line-height: 20px;
+  font-size: 10px; font-weight: 800;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Escala Likert */
+.fw-likert {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.fw-likert label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.fw-likert input { display: none; }
+.fw-likert .fw-dot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--fw-border);
+  background: var(--fw-surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  color: var(--fw-muted);
+  transition: all .15s;
+}
+.fw-likert label:hover .fw-dot,
+.fw-likert input:checked + .fw-dot {
+  border-color: var(--fw-accent);
+  background: rgba(79,124,255,.2);
+  color: var(--fw-accent);
+  transform: scale(1.08);
+}
+.fw-likert .fw-lbl {
+  font-size: 9px;
+  color: var(--fw-muted);
+  text-align: center;
+}
+
+/* Opciones múltiple */
+.fw-options { display: flex; flex-direction: column; gap: 7px; }
+.fw-opt-btn {
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  color: var(--fw-text);
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+}
+.fw-opt-btn:hover, .fw-opt-btn.selected {
+  border-color: var(--fw-accent);
+  background: rgba(79,124,255,.12);
+  color: var(--fw-accent);
+}
+
+/* Textarea */
+.fw-textarea {
+  width: 100%;
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  border-radius: 8px;
+  color: var(--fw-text);
+  font-size: 12.5px;
+  font-family: inherit;
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color .15s;
+}
+.fw-textarea:focus { border-color: var(--fw-accent); }
+.fw-textarea::placeholder { color: var(--fw-muted); }
+
+/* Footer */
+#fw-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--fw-border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.fw-nav-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+  font-family: 'Trebuchet MS', sans-serif;
+  letter-spacing: .03em;
+}
+.fw-nav-btn.secondary {
+  background: var(--fw-surface);
+  border: 1px solid var(--fw-border);
+  color: var(--fw-muted);
+}
+.fw-nav-btn.secondary:hover { border-color: var(--fw-text); color: var(--fw-text); }
+.fw-nav-btn.primary {
+  background: var(--fw-accent);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(79,124,255,.35);
+}
+.fw-nav-btn.primary:hover { background: #6b91ff; }
+.fw-nav-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Éxito */
+#fw-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 36px 24px;
+  gap: 12px;
+}
+#fw-success.show { display: flex; animation: fw-fade .3s ease both; }
+#fw-success .fw-check {
+  width: 56px; height: 56px;
+  background: rgba(62,207,142,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+#fw-success h3 {
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 15px;
+  color: var(--fw-text);
+}
+#fw-success p { font-size: 12px; color: var(--fw-muted); max-width: 240px; }

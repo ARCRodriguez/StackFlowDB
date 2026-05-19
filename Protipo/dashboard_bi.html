@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zidkenu — Dashboard BI</title>
+<title>Zidkenu — Estadisticas</title>
 <link rel="stylesheet" href="zidkenu_style.css">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 </head>
 <body class="zk-app">
 
-<!-- SIDEBAR -->
+<!-- SIDEBARR -->
 <nav class="sidebar">
   <div class="sidebar-brand">
     <div class="logo-mark">
@@ -36,14 +36,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
       Vista General Tareas
     </a>
-    <a class="nav-item" href="modulo_empresas.html">
+    <a class="nav-item" href="listado_empresa.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
       Módulo de Empresas
     </a>
     <div class="nav-section-label">Analítica</div>
     <a class="nav-item active" href="dashboard_bi.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-      Dashboard BI
+      Estadistica
     </a>
   </nav>
   <div class="sidebar-footer">
@@ -60,7 +60,7 @@
 <main class="main-content">
   <div class="app-topbar">
     <div class="topbar-left">
-      <h1>Dashboard BI — Analítica Organizacional</h1>
+      <h1>Analítica Organizacional</h1>
       <p id="pageSubtitle">Indicadores clave de desempeño · Zidkenu</p>
     </div>
     <div>
@@ -73,7 +73,7 @@
     <!-- Banner -->
     <div class="bi-banner">
       <div class="banner-text">
-        <div class="banner-tag">📊 Business Intelligence</div>
+        <div class="banner-tag">📊 Estadisticas</div>
         <div class="banner-title">Panel de Desempeño Organizacional</div>
         <div class="banner-sub">Métricas de cumplimiento, rendimiento por colaborador y estado de tareas en tiempo real.</div>
       </div>
@@ -452,6 +452,7 @@ function buildTablaEmpresas() {
     </tbody>`;
 }
 
+
 // ── RINGS SVG ──
 function drawRing(svgId, labelId, value, color, labelText) {
   const r=36, cx=50, cy=50, strokeW=10;
@@ -486,6 +487,119 @@ function logout() {
   }
 }
 </script>
-<button type="button" class="btn-feedback">Feedback</button>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER BAR — Zidkenu TaskFlow
+     Pegar justo ANTES de <script src="zidkenu_data.js">
+     (o antes del último </body> si no tiene ese script)
+     ══════════════════════════════════════════════ -->
+
+<!-- Empuja el contenido para que no quede oculto -->
+<div style="height:52px"></div>
+
+<!-- FOOTER BAR -->
+<div id="footerBar" style="
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  height:52px;
+  background:var(--navy);
+  border-top:1px solid rgba(1,173,243,.18);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  box-shadow:0 -2px 16px rgba(10,32,65,.25);
+">
+  <!-- IZQUIERDA: Ir al Dashboard -->
+  <div style="position:relative">
+    <button id="btnDashToggle" onclick="toggleDashMenu()" style="
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 16px;border-radius:8px;border:1.5px solid rgba(1,173,243,.35);
+      background:rgba(1,173,243,.1);color:var(--sky);
+      font-size:12px;font-weight:700;cursor:pointer;
+      transition:.15s;letter-spacing:.3px;
+    "
+    onmouseover="this.style.background='rgba(1,173,243,.2)'"
+    onmouseout="this.style.background='rgba(1,173,243,.1)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Dashboard
+      <svg id="dashChevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform .2s"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <!-- Menú desplegable (hacia arriba) -->
+    <div id="dashMenu" style="
+      display:none;position:absolute;bottom:calc(100% + 8px);left:0;
+      background:var(--navy);border:1.5px solid rgba(1,173,243,.25);
+      border-radius:10px;min-width:210px;
+      box-shadow:0 -8px 24px rgba(10,32,65,.4);
+      overflow:hidden;z-index:400;
+    ">
+      <div style="padding:8px 14px 6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.08)">
+        Ir a módulo
+      </div>
+      <a href="dashboard.html" onclick="irDashboard(event,'dashboard.html')" style="
+        display:flex;align-items:center;gap:10px;padding:11px 16px;
+        color:rgba(255,255,255,.85);font-size:13px;text-decoration:none;
+        transition:.15s;border-bottom:1px solid rgba(255,255,255,.06);
+      "
+      onmouseover="this.style.background='rgba(1,173,243,.15)';this.style.color='var(--sky)'"
+      onmouseout="this.style.background='transparent';this.style.color='rgba(255,255,255,.85)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Inicio / Dashboard
+        <span style="margin-left:auto;font-size:10px;background:rgba(1,173,243,.2);color:var(--sky);padding:2px 7px;border-radius:10px;font-weight:700">INICIO</span>
+      </a>
+      <div style="padding:8px 16px 10px;font-size:11px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+        Sesión activa — sin re-login
+      </div>
+    </div>
+  </div>
+
+  <!-- DERECHA: Feedback -->
+  <button id="btnFeedback" style="
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);
+    background:transparent;color:rgba(255,255,255,.6);
+    font-size:12px;font-weight:600;cursor:pointer;
+    transition:.15s;letter-spacing:.3px;
+  "
+  onmouseover="this.style.borderColor='rgba(1,173,243,.5)';this.style.color='var(--sky)';this.style.background='rgba(1,173,243,.08)'"
+  onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.6)';this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    </svg>
+    Feedback
+    
+  </button>
+</div>
+
+<!-- SCRIPT del footer — pegar dentro del <script> existente,
+     o en un <script> propio si el archivo no tiene uno -->
+<script>
+function toggleDashMenu() {
+  const menu    = document.getElementById('dashMenu');
+  const chevron = document.getElementById('dashChevron');
+  const open    = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  chevron.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+document.addEventListener('click', function(e) {
+  const toggle = document.getElementById('btnDashToggle');
+  const menu   = document.getElementById('dashMenu');
+  if (menu && toggle && !toggle.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+    const chevron = document.getElementById('dashChevron');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+  }
+});
+
+function irDashboard(event, url) {
+  event.preventDefault();
+  window.location.href = url;
+}
+</script>
 </body>
 </html>
