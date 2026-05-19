@@ -129,7 +129,7 @@ function handleLogin() {
 
 document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 </script>
-<button type="button" class="btn-feedback">Feedback</button>
+<button id="btnFeedback" onclick="window.location.href='encuesta_v2.html'" style=" display:inline-flex;align-items:center;gap:8px; padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15); background:transparent;color:rgba(255,255,255,.6); font-size:12px;font-weight:600;cursor:pointer; transition:.15s;letter-spacing:.3px; " onmouseover="this.style.borderColor='rgba(1,173,243,.5)';this.style.color='var(--sky)';this.style.background='rgba(1,173,243,.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.6)';this.style.background='transparent'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Feedback</button>
 
 </body>
 </html>
