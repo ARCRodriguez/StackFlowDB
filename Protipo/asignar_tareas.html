@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ContaFlow — Asignar Tareas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1d1656; --blue1:#004aad; --blue2:#0041ff; --cyan:#289dd2;
+  --white:#ffffff; --gray50:#f8f9fc; --gray100:#eef1f7; --gray200:#dce2f0;
+  --gray300:#c4cad8; --gray500:#7a84a0; --gray700:#3d4460; --text:#1a1f36;
+  --radius:10px; --radius-lg:14px;
+  --shadow:0 2px 12px rgba(29,22,86,.08);
+  --shadow-md:0 4px 20px rgba(29,22,86,.12);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Roboto',sans-serif;background:var(--gray50);color:var(--text);min-height:100vh;}
+
+.topbar{background:var(--white);border-bottom:1px solid var(--gray100);height:56px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
+.topbar-left{display:flex;align-items:center;gap:16px;}
+.topbar-logo{font-size:18px;font-weight:700;color:var(--navy);}
+.topbar-logo span{color:var(--cyan);}
+.topbar-sep{width:1px;height:24px;background:var(--gray200);}
+.topbar-page{font-size:14px;font-weight:500;color:var(--gray700);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:20px;
+  background:var(--gray50);border:1px solid var(--gray100);font-size:13px;font-weight:500;color:var(--gray700);}
+.user-dot{width:8px;height:8px;border-radius:50%;}
+.dot-admin{background:var(--blue1);}
+.dot-directivo{background:#1a56db;}
+.btn-nav{padding:7px 14px;border-radius:var(--radius);border:1px solid var(--gray200);
+  background:var(--white);color:var(--gray700);font-family:'Roboto',sans-serif;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;}
+.btn-nav:hover{border-color:var(--blue1);color:var(--blue1);}
+.btn-nav.accent{background:linear-gradient(135deg,var(--blue1),var(--blue2));
+  color:#fff;border:none;box-shadow:0 3px 10px rgba(0,65,255,.2);}
+.btn-nav.accent:hover{opacity:.92;color:#fff;}
+.btn-logout{padding:7px 14px;border-radius:var(--radius);border:none;
+  background:var(--gray50);color:var(--gray500);font-family:'Roboto',sans-serif;
+  font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-logout:hover{background:#fff1f0;color:#dc2626;}
+
+.page-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;
+  padding:28px;max-width:1200px;margin:0 auto;}
+
+.card{background:var(--white);border:1px solid var(--gray100);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow);}
+.card-header{padding:20px 24px 16px;border-bottom:1px solid var(--gray100);
+  display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:15px;font-weight:700;color:var(--navy);}
+.card-sub{font-size:12px;color:var(--gray500);margin-top:2px;}
+.card-body{padding:24px;}
+
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--gray700);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px;}
+.field select,.field input{width:100%;padding:10px 14px;
+  border:1.5px solid var(--gray200);border-radius:var(--radius);
+  font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);
+  background:var(--gray50);outline:none;transition:border-color .2s;appearance:none;}
+.field select:focus,.field input:focus{
+  border-color:var(--blue1);background:var(--white);
+  box-shadow:0 0 0 3px rgba(0,74,173,.07);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+.emp-preview{display:none;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:var(--radius);background:var(--gray50);border:1px solid var(--gray100);
+  margin-top:8px;}
+.emp-preview.show{display:flex;}
+.cdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.cdot-alta {background:#ef4444;box-shadow:0 0 5px #ef4444;}
+.cdot-media{background:#f59e0b;box-shadow:0 0 5px #f59e0b;}
+.cdot-baja {background:#22c55e;box-shadow:0 0 5px #22c55e;}
+.emp-name-prev{font-weight:600;color:var(--navy);font-size:13px;}
+.emp-comp-prev{font-size:12px;color:var(--gray500);margin-left:auto;}
+
+.sec-divider{height:1px;background:var(--gray100);margin:20px 0;}
+.sec-step{font-size:11px;font-weight:700;color:var(--gray500);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;}
+
+.block-section{margin-bottom:16px;}
+.block-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.block-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;}
+.bl-anual  {color:var(--blue1);}
+.bl-mensual{color:#7c3aed;}
+.bl-general{color:#d97706;}
+
+.btn-toggle-block{padding:5px 14px;border-radius:20px;border:1.5px solid;
+  font-size:12px;font-weight:600;cursor:pointer;font-family:'Roboto',sans-serif;
+  transition:all .2s;display:flex;align-items:center;gap:6px;}
+.btn-toggle-block.anual  {border-color:var(--blue1);color:var(--blue1);background:transparent;}
+.btn-toggle-block.anual.on  {background:rgba(0,74,173,.08);}
+.btn-toggle-block.mensual{border-color:#7c3aed;color:#7c3aed;background:transparent;}
+.btn-toggle-block.mensual.on{background:rgba(124,58,237,.08);}
+.btn-toggle-block.general{border-color:#d97706;color:#d97706;background:transparent;}
+.btn-toggle-block.general.on{background:rgba(217,119,6,.08);}
+
+.task-check-list{display:none;flex-direction:column;gap:4px;padding:12px;
+  background:var(--gray50);border-radius:var(--radius);border:1px solid var(--gray100);margin-bottom:8px;}
+.task-check-list.show{display:flex;}
+.task-check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:8px;cursor:pointer;transition:background .15s;}
+.task-check-item:hover{background:var(--gray100);}
+.task-check-item input[type=checkbox]{width:16px;height:16px;
+  accent-color:var(--blue1);cursor:pointer;flex-shrink:0;}
+.task-check-item.mensual input{accent-color:#7c3aed;}
+.task-check-item label{font-size:13px;color:var(--text);font-weight:400;
+  cursor:pointer;margin:0;text-transform:none;letter-spacing:0;}
+
+.chips-area{display:flex;flex-wrap:wrap;gap:6px;min-height:20px;margin-top:4px;}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+  border-radius:20px;font-size:12px;font-weight:500;}
+.chip.anual  {background:#eef3ff;color:var(--blue1);}
+.chip.mensual{background:#f3eeff;color:#7c3aed;}
+.chip-del{cursor:pointer;opacity:.6;font-size:13px;}
+.chip-del:hover{opacity:1;}
+
+/* GENERAL */
+.gen-form-box{background:#fffbeb;border:1.5px solid #fde68a;
+  border-radius:var(--radius);padding:16px;margin-bottom:10px;}
+.gen-form-title{font-size:11px;font-weight:700;color:#d97706;
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;}
+.gen-input-row{display:flex;gap:8px;margin-bottom:8px;}
+.gen-input-row input{flex:1;padding:9px 12px;border:1.5px solid #fde68a;
+  border-radius:var(--radius);font-family:'Roboto',sans-serif;font-size:13px;
+  color:var(--text);background:var(--white);outline:none;transition:border-color .2s;}
+.gen-input-row input:focus{border-color:#d97706;}
+.gen-desc-input{width:100%;padding:9px 12px;border:1.5px solid #fde68a;
+  border-radius:var(--radius);font-family:'Roboto',sans-serif;font-size:13px;
+  color:var(--text);background:var(--white);outline:none;transition:border-color .2s;
+  resize:vertical;min-height:60px;margin-bottom:8px;}
+.gen-desc-input:focus{border-color:#d97706;}
+.gen-hint{font-size:11px;color:#d97706;}
+.btn-add-gen{padding:9px 14px;border-radius:var(--radius);border:1.5px solid #d97706;
+  background:rgba(217,119,6,.08);color:#d97706;cursor:pointer;
+  font-family:'Roboto',sans-serif;font-size:13px;font-weight:600;
+  white-space:nowrap;transition:background .2s;}
+.btn-add-gen:hover{background:rgba(217,119,6,.18);}
+
+.gen-cards{display:flex;flex-direction:column;gap:6px;}
+.gen-card{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;
+  background:var(--white);border:1px solid #fde68a;border-radius:var(--radius);}
+.gen-card:hover{border-color:#d97706;}
+.gen-card-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.gen-card-body{flex:1;}
+.gen-card-name{font-size:13px;font-weight:600;color:var(--text);}
+.gen-card-desc{font-size:12px;color:var(--gray500);margin-top:2px;}
+.gen-card-desc.empty{color:var(--gray300);font-style:italic;}
+.gen-card-del{flex-shrink:0;width:24px;height:24px;border-radius:6px;
+  border:1px solid var(--gray200);background:var(--white);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--gray500);transition:all .2s;}
+.gen-card-del:hover{background:#fff1f0;border-color:#fca5a5;color:#dc2626;}
+
+.btn-primary{padding:12px 28px;border-radius:var(--radius);border:none;
+  background:linear-gradient(135deg,var(--blue1),var(--blue2));color:#fff;
+  font-family:'Roboto',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,65,255,.2);}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(0,65,255,.3);transform:translateY(-1px);}
+.btn-primary:active{transform:scale(.98);}
+.form-actions{display:flex;align-items:center;gap:14px;margin-top:24px;
+  padding-top:20px;border-top:1px solid var(--gray100);}
+.form-success{font-size:13px;color:#16a34a;font-weight:500;
+  opacity:0;transition:opacity .3s;}
+.form-success.show{opacity:1;}
+
+/* PANEL DERECHO */
+.recent-list{display:flex;flex-direction:column;gap:8px;}
+.recent-item{padding:12px 14px;border-radius:var(--radius);
+  border:1px solid var(--gray100);background:var(--gray50);}
+.recent-emp{font-weight:700;color:var(--navy);font-size:13px;margin-bottom:4px;}
+.recent-meta{color:var(--gray500);font-size:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.recent-tag{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.rt-anual  {background:#eef3ff;color:var(--blue1);}
+.rt-mensual{background:#f3eeff;color:#7c3aed;}
+.rt-general{background:#fffbeb;color:#d97706;}
+
+.empty-state{text-align:center;padding:28px;color:var(--gray500);font-size:13px;}
+
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;
+  padding:12px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;
+  box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px;
+  transform:translateY(80px);opacity:0;transition:all .3s;color:#fff;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:#16a34a;}
+.toast.error  {background:#dc2626;}
+.toast.info   {background:var(--navy);}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--gray200);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-logo">Conta<span>Flow</span></span>
+    <span class="topbar-sep"></span>
+    <span class="topbar-page">Asignar Tareas</span>
+  </div>
+  <div class="topbar-right">
+    <div class="user-chip">
+      <span class="user-dot" id="user-dot"></span>
+      <span id="user-name">—</span>
+    </div>
+    <a class="btn-nav" href="tareas_pred.html">⚙ Tareas predeterminadas</a>
+    <a class="btn-nav" id="btn-vista" href="#">📊 Vista General</a>
+    <button class="btn-logout" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<div class="page-layout">
+
+  <!-- FORMULARIO -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Asignar tareas a empresa</div>
+          <div class="card-sub">Selecciona empresa, contador y bloques de tareas a incluir.</div>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <div class="sec-step">1 — Empresa y asignación</div>
+        <div class="field">
+          <label>Empresa</label>
+          <select id="f-empresa" onchange="onEmpresaChange()">
+            <option value="">— Selecciona una empresa —</option>
+          </select>
+          <div class="emp-preview" id="emp-preview">
+            <span class="cdot" id="prev-dot"></span>
+            <span class="emp-name-prev" id="prev-nombre"></span>
+            <span class="emp-comp-prev" id="prev-comp"></span>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Contador asignado</label>
+            <select id="f-contador">
+              <option value="">— Seleccionar —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Fecha límite</label>
+            <input type="date" id="f-limite"/>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Fecha de inicio</label>
+            <input type="date" id="f-inicio"/>
+          </div>
+        </div>
+
+        <div class="sec-divider"></div>
+        <div class="sec-step">2 — Bloques de tareas</div>
+
+        <!-- Anuales -->
+        <div class="block-section">
+          <div class="block-section-header">
+            <span class="block-label bl-anual">Tareas Anuales</span>
+            <button class="btn-toggle-block anual" id="tog-anual" onclick="toggleBloque('anual')">
+              <span>＋</span> Agregar bloque anual
+            </button>
+          </div>
+          <div class="task-check-list" id="list-anual"></div>
+          <div class="chips-area" id="chips-anual"></div>
+        </div>
+
+        <!-- Mensuales -->
+        <div class="block-section">
+          <div class="block-section-header">
+            <span class="block-label bl-mensual">Tareas Mensuales</span>
+            <button class="btn-toggle-block mensual" id="tog-mensual" onclick="toggleBloque('mensual')">
+              <span>＋</span> Agregar bloque mensual
+            </button>
+          </div>
+          <div class="task-check-list" id="list-mensual"></div>
+          <div class="chips-area" id="chips-mensual"></div>
+        </div>
+
+        <!-- Generales -->
+        <div class="block-section">
+          <div class="block-section-header">
+            <span class="block-label bl-general">Tareas Generales / Esporádicas</span>
+            <button class="btn-toggle-block general" id="tog-general" onclick="toggleBloque('general')">
+              <span>＋</span> Agregar tarea general
+            </button>
+          </div>
+          <div id="general-input-area" style="display:none;margin-bottom:10px;">
+            <div class="gen-form-box">
+              <div class="gen-form-title">Nueva tarea general / esporádica</div>
+              <div class="gen-input-row">
+                <input type="text" id="gen-nombre" placeholder="Nombre de la tarea..."
+                  onkeydown="if(event.key==='Enter')addGeneral()"/>
+                <button class="btn-add-gen" onclick="addGeneral()">+ Agregar</button>
+              </div>
+              <textarea class="gen-desc-input" id="gen-desc"
+                placeholder="Descripción específica (opcional)..."></textarea>
+              <div class="gen-hint">💡 Puedes agregar varias tareas una por una.</div>
+            </div>
+          </div>
+          <div class="gen-cards" id="gen-cards"></div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" onclick="registrar()">Registrar asignación</button>
+          <span class="form-success" id="form-success">✓ Asignación registrada</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Asignaciones recientes</div>
+          <div class="card-sub">Últimas 5 empresas asignadas.</div>
+        </div>
+      </div>
+      <div class="card-body" style="padding:16px 20px;">
+        <div id="recent-list" class="recent-list"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="text-align:center;padding:20px;">
+        <div style="font-size:13px;color:var(--gray500);margin-bottom:12px;">
+          ¿Necesitas editar el catálogo de tareas?
+        </div>
+        <a class="btn-nav accent" href="tareas_pred.html">⚙ Gestionar tareas predeterminadas</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="db.js"></script>
+<script>
+let session = null;
+let bloques = { anual:false, mensual:false, general:false };
+let selAnual = [], selMensual = [], pendingGenerales = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  session = DB.requireSession(['admin','directivo']);
+  if (!session) return;
+  document.getElementById('user-name').textContent = session.nombre;
+  document.getElementById('user-dot').className = 'user-dot dot-' + session.rol;
+  const vistaMap = {admin:'vista_admin.html',directivo:'vista_directivo.html'};
+  document.getElementById('btn-vista').href = vistaMap[session.rol]||'vista_admin.html';
+  document.getElementById('f-inicio').value = new Date().toISOString().split('T')[0];
+  populateEmpresas();
+  populateContadores();
+  renderRecientes();
+});
+
+function populateEmpresas() {
+  const sel = document.getElementById('f-empresa');
+  DB.getEmpresas().forEach(e => {
+    const o = document.createElement('option');
+    o.value=e.id; o.textContent=e.nombre; sel.appendChild(o);
+  });
+}
+function populateContadores() {
+  const sel = document.getElementById('f-contador');
+  DB.getUsuarios().filter(u=>u.rol==='contador').forEach(u => {
+    const o = document.createElement('option');
+    o.value=u.id; o.textContent=u.nombre; sel.appendChild(o);
+  });
+}
+function onEmpresaChange() {
+  const id = document.getElementById('f-empresa').value;
+  const prev = document.getElementById('emp-preview');
+  if (!id) { prev.classList.remove('show'); return; }
+  const emp = DB.getEmpresa(id);
+  document.getElementById('prev-nombre').textContent = emp.nombre;
+  document.getElementById('prev-comp').textContent   = 'Complejidad: '+emp.complejidad;
+  document.getElementById('prev-dot').className = 'cdot cdot-'+emp.complejidad.toLowerCase();
+  prev.classList.add('show');
+  const asig = DB.getAsignacionByEmpresa(id);
+  if (asig) {
+    document.getElementById('f-contador').value = asig.contador_id;
+    document.getElementById('f-limite').value   = asig.fecha_limite||'';
+  }
+}
+
+/* TOGGLE BLOQUE — checkboxes inician MARCADOS */
+function toggleBloque(tipo) {
+  bloques[tipo] = !bloques[tipo];
+  const btn = document.getElementById('tog-'+tipo);
+  const labels = {anual:'bloque anual',mensual:'bloque mensual',general:'tarea general'};
+
+  if (bloques[tipo]) {
+    btn.classList.add('on');
+    btn.innerHTML = `<span>✕</span> Quitar ${labels[tipo]}`;
+    if (tipo !== 'general') {
+      // Marcar TODAS por defecto
+      const preds = DB.getTareasPredByTipo(tipo);
+      if (tipo==='anual')   selAnual   = preds.map(p=>p.id);
+      if (tipo==='mensual') selMensual = preds.map(p=>p.id);
+      renderCheckList(tipo);
+      document.getElementById('list-'+tipo).classList.add('show');
+    } else {
+      document.getElementById('general-input-area').style.display = 'block';
+    }
+  } else {
+    btn.classList.remove('on');
+    btn.innerHTML = `<span>＋</span> Agregar ${labels[tipo]}`;
+    if (tipo==='anual')   { selAnual=[]; document.getElementById('list-anual').classList.remove('show'); }
+    if (tipo==='mensual') { selMensual=[]; document.getElementById('list-mensual').classList.remove('show'); }
+    if (tipo==='general') {
+      pendingGenerales=[];
+      document.getElementById('gen-cards').innerHTML='';
+      document.getElementById('general-input-area').style.display='none';
+    }
+  }
+  renderChips();
+}
+
+function renderCheckList(tipo) {
+  const cont  = document.getElementById('list-'+tipo);
+  const preds = DB.getTareasPredByTipo(tipo);
+  const sel   = tipo==='anual' ? selAnual : selMensual;
+  cont.innerHTML = '';
+  if (!preds.length) {
+    cont.innerHTML='<div style="font-size:12px;color:var(--gray500);padding:6px;">Sin tareas en catálogo. <a href="tareas_pred.html" style="color:var(--blue1)">Agregar →</a></div>';
+    return;
+  }
+  preds.forEach(p => {
+    const row = document.createElement('label');
+    row.className = 'task-check-item '+tipo;
+    const checked = sel.includes(p.id);
+    row.innerHTML = `
+      <input type="checkbox" value="${p.id}" ${checked?'checked':''}
+        onchange="onCheck('${tipo}','${p.id}',this.checked)"/>
+      <span>${p.nombre}</span>`;
+    cont.appendChild(row);
+  });
+}
+
+function onCheck(tipo, id, checked) {
+  const arr = tipo==='anual' ? selAnual : selMensual;
+  if (checked) { if(!arr.includes(id)) arr.push(id); }
+  else { const i=arr.indexOf(id); if(i>-1) arr.splice(i,1); }
+  renderChips();
+}
+function uncheckTarea(tipo, id) {
+  const arr = tipo==='anual' ? selAnual : selMensual;
+  const i = arr.indexOf(id); if(i>-1) arr.splice(i,1);
+  const cb = document.querySelector(`#list-${tipo} input[value="${id}"]`);
+  if(cb) cb.checked=false;
+  renderChips();
+}
+
+function renderChips() {
+  ['anual','mensual'].forEach(tipo => {
+    const cont = document.getElementById('chips-'+tipo);
+    const arr  = tipo==='anual'? selAnual : selMensual;
+    cont.innerHTML='';
+    if(!bloques[tipo]) return;
+    if(!arr.length){
+      cont.innerHTML='<span style="font-size:12px;color:var(--gray500);">Selecciona al menos una tarea arriba.</span>';
+      return;
+    }
+    arr.forEach(id => {
+      const p = DB.getTareasPred().find(t=>t.id===id);
+      if(!p) return;
+      const c = document.createElement('span');
+      c.className='chip '+tipo;
+      c.innerHTML=p.nombre+`<span class="chip-del" onclick="uncheckTarea('${tipo}','${id}')">×</span>`;
+      cont.appendChild(c);
+    });
+  });
+}
+
+function addGeneral() {
+  const nombre = document.getElementById('gen-nombre').value.trim();
+  const desc   = document.getElementById('gen-desc').value.trim();
+  if(!nombre){ showToast('Escribe el nombre.','error'); return; }
+  pendingGenerales.push({nombre,descripcion:desc});
+  document.getElementById('gen-nombre').value='';
+  document.getElementById('gen-desc').value='';
+  document.getElementById('gen-nombre').focus();
+  renderGeneralCards();
+}
+function removeGeneral(i) {
+  pendingGenerales.splice(i,1);
+  renderGeneralCards();
+}
+function renderGeneralCards() {
+  const cont = document.getElementById('gen-cards');
+  cont.innerHTML='';
+  pendingGenerales.forEach((t,i) => {
+    const c = document.createElement('div');
+    c.className='gen-card';
+    c.innerHTML=`<span class="gen-card-icon">📋</span>
+      <div class="gen-card-body">
+        <div class="gen-card-name">${t.nombre}</div>
+        <div class="gen-card-desc ${t.descripcion?'':'empty'}">${t.descripcion||'Sin descripción'}</div>
+      </div>
+      <button class="gen-card-del" onclick="removeGeneral(${i})">✕</button>`;
+    cont.appendChild(c);
+  });
+}
+
+function registrar() {
+  const empresaId  = document.getElementById('f-empresa').value;
+  const contadorId = document.getElementById('f-contador').value;
+  const inicio     = document.getElementById('f-inicio').value;
+  const limite     = document.getElementById('f-limite').value;
+  if(!empresaId)  { showToast('Selecciona una empresa.','error'); return; }
+  if(!contadorId) { showToast('Selecciona un contador.','error'); return; }
+  if(!limite)     { showToast('Ingresa fecha límite.','error'); return; }
+  const total = selAnual.length+selMensual.length+pendingGenerales.length;
+  if(!total)      { showToast('Agrega al menos una tarea.','error'); return; }
+  if(bloques.general && !pendingGenerales.length){
+    showToast('Agrega al menos una tarea general o quita ese bloque.','error'); return; }
+
+  const asig = DB.crearAsignacion({
+    empresa_id:empresaId, contador_id:contadorId,
+    asignado_por:session.id, fecha_inicio:inicio, fecha_limite:limite,
+  });
+  [...selAnual.map(id=>({tipo:'anual',predId:id})),
+   ...selMensual.map(id=>({tipo:'mensual',predId:id})),
+   ...pendingGenerales.map(g=>({tipo:'general',predId:null,nombre:g.nombre,descripcion:g.descripcion}))
+  ].forEach(t => {
+    const pred = t.predId ? DB.getTareasPred().find(p=>p.id===t.predId) : null;
+    DB.crearTareaAsignada({
+      asignacion_id:asig.id, empresa_id:empresaId, contador_id:contadorId,
+      tarea_pred_id:t.predId||null, tipo:t.tipo,
+      nombre:pred?pred.nombre:t.nombre,
+      descripcion:(pred?.descripcion || t.descripcion || ''), fecha_limite:limite,
+    });
+  });
+
+  // reset
+  document.getElementById('f-empresa').value='';
+  document.getElementById('f-contador').value='';
+  document.getElementById('f-limite').value='';
+  document.getElementById('emp-preview').classList.remove('show');
+  bloques={anual:false,mensual:false,general:false};
+  selAnual=[]; selMensual=[]; pendingGenerales=[];
+  ['anual','mensual'].forEach(t=>{
+    document.getElementById('tog-'+t).classList.remove('on');
+    document.getElementById('tog-'+t).innerHTML=`<span>＋</span> Agregar bloque ${t}`;
+    document.getElementById('list-'+t).classList.remove('show');
+    document.getElementById('chips-'+t).innerHTML='';
+  });
+  document.getElementById('tog-general').classList.remove('on');
+  document.getElementById('tog-general').innerHTML='<span>＋</span> Agregar tarea general';
+  document.getElementById('general-input-area').style.display='none';
+  document.getElementById('gen-cards').innerHTML='';
+  renderRecientes();
+  const s=document.getElementById('form-success');
+  s.classList.add('show'); setTimeout(()=>s.classList.remove('show'),3000);
+  showToast('✓ Asignación registrada','success');
+}
+
+function renderRecientes() {
+  const cont  = document.getElementById('recent-list');
+  const asigs = DB.getAsignaciones().filter(a=>a.activa).slice(-5).reverse();
+  if(!asigs.length){
+    cont.innerHTML='<div class="empty-state">📭 Sin asignaciones aún.</div>'; return;
+  }
+  cont.innerHTML='';
+  asigs.forEach(a=>{
+    const emp=DB.getEmpresa(a.empresa_id);
+    const cnt=DB.getUsuario(a.contador_id);
+    const tareas=DB.getTareasByAsignacion(a.id);
+    const cA=tareas.filter(t=>t.tipo==='anual').length;
+    const cM=tareas.filter(t=>t.tipo==='mensual').length;
+    const cG=tareas.filter(t=>t.tipo==='general').length;
+    const d=document.createElement('div');
+    d.className='recent-item';
+    d.innerHTML=`<div class="recent-emp">${emp?emp.nombre:'—'}</div>
+      <div class="recent-meta">
+        <span>👤 ${cnt?cnt.nombre:'—'}</span>
+        ${cA?`<span class="recent-tag rt-anual">${cA} anuales</span>`:''}
+        ${cM?`<span class="recent-tag rt-mensual">${cM} mensuales</span>`:''}
+        ${cG?`<span class="recent-tag rt-general">${cG} generales</span>`:''}
+      </div>`;
+    cont.appendChild(d);
+  });
+}
+
+function showToast(msg,tipo='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+tipo;
+  setTimeout(()=>t.className='toast',3000);
+}
+function logout(){ DB.clearSession(); location.reload(); }
+</script>
+</body>
+</html>
