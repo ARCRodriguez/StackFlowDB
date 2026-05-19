@@ -11,7 +11,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* ── TOPBAR ── */
+/* ── TOPBAAR ── */
 .topbar{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.35)}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-mark{width:32px;height:32px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;color:var(--navy)}
