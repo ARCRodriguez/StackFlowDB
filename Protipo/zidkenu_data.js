@@ -26,6 +26,10 @@ function irAsignarContadorTareas(empresaId) {
   window.location.href = url;
 }
 
+function irFeedback() {
+  window.location.href = 'encuesta_v2.html';
+}
+
 function zkGet(key) {
   try { return localStorage.getItem(key); } catch { return null; }
 }
