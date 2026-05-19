@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   ContaFlow — Capa de Base de Datos (localStorage)
+   Zidkenu — Capa de Base de Datos (localStorage)
    Simula una BD relacional con IDs únicos y relaciones
 ═══════════════════════════════════════════════════ */
 
@@ -75,8 +75,39 @@ const DB = {
     return usuarios[0] || null;
   },
 
+  /** Mapea sesión Zidkenu (login.html) → usuario Zidkenu (cf_session). */
+  syncFromZidkenuSession() {
+    const raw = sessionStorage.getItem('zidkenu_user');
+    if (!raw) return null;
+    let zk;
+    try { zk = JSON.parse(raw); } catch { return null; }
+
+    const rolMap = {
+      administrador: 'admin',
+      directivo: 'directivo',
+      supervisor: 'supervisor',
+      contador: 'contador',
+      usuario: 'contador',
+    };
+    const cfRol = rolMap[zk.rol] || zk.rol;
+    const usuarios = this.getUsuarios();
+    const primerNombre = (zk.nombre || '').split(' ')[0].toLowerCase();
+
+    let u = usuarios.find(x =>
+      x.rol === cfRol && primerNombre &&
+      x.nombre.toLowerCase().includes(primerNombre)
+    );
+    if (!u) u = usuarios.find(x => x.rol === cfRol);
+    if (u) {
+      this.setSession(u);
+      return u;
+    }
+    return null;
+  },
+
   requireSession(rolesPermitidos) {
     let u = this.getSession();
+    if (!u) u = this.syncFromZidkenuSession();
     if (!u || (rolesPermitidos && !rolesPermitidos.includes(u.rol))) {
       u = this._resolveUsuario(rolesPermitidos);
       if (u) this.setSession(u);
@@ -264,14 +295,65 @@ const DB = {
     if (!tarea) return 'asignado';
     if (tarea.estado === 'completado') return 'completado';
     if (tarea.estado === 'en_validacion') return 'en_validacion';
-    // check vencimiento
+    if (tarea.estado === 'en_proceso') return 'en_proceso';
     if (tarea.fecha_limite) {
-      const now = new Date(); now.setHours(0,0,0,0);
+      const now = new Date(); now.setHours(0, 0, 0, 0);
       const lim = new Date(tarea.fecha_limite + 'T00:00:00');
-      if (lim < now) return 'vencido';
-      if ((lim - now) / 86400000 <= 7 && tarea.estado === 'en_proceso') return 'por_vencer';
+      if (lim < now) return 'vencido_no_iniciado';
+      if ((lim - now) / 86400000 <= 7) return 'porvencer_no_iniciado';
     }
-    return tarea.estado; // asignado | en_proceso
+    return 'asignado';
+  },
+
+  estadoCirculo(ev) {
+    if (ev === 'completado') return 'completado';
+    if (ev === 'en_validacion') return 'en_validacion';
+    if (ev === 'en_proceso') return 'en_proceso';
+    return 'asignado';
+  },
+
+  fmtFecha(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  },
+
+  /** HTML de celda de tarea — icono izquierda + fechas (sin línea divisoria). */
+  buildTaskCellHtml(tarea) {
+    const ev = this.getEstadoVisual(tarea);
+    const circulo = this.estadoCirculo(ev);
+    let alertHtml = '';
+    if (tarea.estado !== 'completado') {
+      if (tarea.prioridad_observacion === 'alta') {
+        alertHtml = '<img src="advertencia_alta.png" class="tcell-alert" alt="obs importante"/>';
+      } else if (tarea.prioridad_observacion === 'media') {
+        alertHtml = '<img src="advertencia_media.png" class="tcell-alert" alt="obs media"/>';
+      }
+    }
+
+    const tieneCompletada = tarea.estado === 'completado' && tarea.fecha_completado;
+    const fechaCompClass = tieneCompletada ? ' completada-date' : ' pendiente-date';
+    const fechaCompVal = tieneCompletada ? this.fmtFecha(tarea.fecha_completado) : '—';
+    const bottomIcon = tieneCompletada
+      ? '<span class="tcell-circle completado tcell-circle-sm"></span>'
+      : '<span class="tcell-circle-placeholder" aria-hidden="true"></span>';
+
+    return `<div class="tcell">
+      <div class="tcell-row">
+        <div class="tcell-icon">${alertHtml}<span class="tcell-circle ${circulo} tcell-circle-sm"></span></div>
+        <div class="tcell-body">
+          <span class="tcell-label">Fecha límite:</span>
+          <span class="tcell-date">${this.fmtFecha(tarea.fecha_limite)}</span>
+        </div>
+      </div>
+      <div class="tcell-row">
+        <div class="tcell-icon">${bottomIcon}</div>
+        <div class="tcell-body">
+          <span class="tcell-label">Fecha completada:</span>
+          <span class="tcell-date${fechaCompClass}">${fechaCompVal}</span>
+        </div>
+      </div>
+    </div>`;
   },
 
   /* ════════════════════════════════

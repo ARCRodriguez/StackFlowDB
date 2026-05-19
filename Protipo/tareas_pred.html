@@ -3,169 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ContaFlow — Tareas Predeterminadas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root {
-  --navy:#1d1656; --blue1:#004aad; --blue2:#0041ff; --cyan:#289dd2;
-  --white:#ffffff; --gray50:#f8f9fc; --gray100:#eef1f7; --gray200:#dce2f0;
-  --gray300:#c4cad8; --gray500:#7a84a0; --gray700:#3d4460; --text:#1a1f36;
-  --radius:10px; --radius-lg:14px;
-  --shadow:0 2px 12px rgba(29,22,86,.08);
-  --shadow-md:0 4px 20px rgba(29,22,86,.12);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Roboto',sans-serif;background:var(--gray50);color:var(--text);min-height:100vh;}
+<title>Zidkenu — Tareas Predeterminadas</title>
+<link rel="stylesheet" href="zidkenu_style.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-.topbar{background:var(--white);border-bottom:1px solid var(--gray100);height:56px;
-  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
-  position:sticky;top:0;z-index:200;box-shadow:var(--shadow);}
-.topbar-left{display:flex;align-items:center;gap:16px;}
-.topbar-logo{font-size:18px;font-weight:700;color:var(--navy);}
-.topbar-logo span{color:var(--cyan);}
-.topbar-sep{width:1px;height:24px;background:var(--gray200);}
-.topbar-page{font-size:14px;font-weight:500;color:var(--gray700);}
-.topbar-right{display:flex;align-items:center;gap:12px;}
-.user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:20px;
-  background:var(--gray50);border:1px solid var(--gray100);font-size:13px;font-weight:500;color:var(--gray700);}
-.user-dot{width:8px;height:8px;border-radius:50%;}
-.dot-admin{background:var(--blue1);}
-.dot-directivo{background:#1a56db;}
-.btn-nav{padding:7px 16px;border-radius:var(--radius);border:1px solid var(--gray200);
-  background:var(--white);color:var(--gray700);font-family:'Roboto',sans-serif;
-  font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;
-  display:inline-flex;align-items:center;gap:6px;}
-.btn-nav:hover{border-color:var(--blue1);color:var(--blue1);}
-.btn-logout{padding:7px 16px;border-radius:var(--radius);border:none;
-  background:var(--gray50);color:var(--gray500);font-family:'Roboto',sans-serif;
-  font-size:13px;cursor:pointer;transition:all .2s;}
-.btn-logout:hover{background:#fff1f0;color:#dc2626;}
-
-.content{padding:28px;max-width:900px;margin:0 auto;}
-.page-header{margin-bottom:24px;}
-.page-title{font-size:22px;font-weight:700;color:var(--navy);letter-spacing:-.3px;}
-.page-sub{font-size:13px;color:var(--gray500);margin-top:4px;}
-
-.card{background:var(--white);border:1px solid var(--gray100);
-  border-radius:var(--radius-lg);box-shadow:var(--shadow);margin-bottom:24px;}
-.card-header{padding:20px 24px 16px;border-bottom:1px solid var(--gray100);}
-.card-title{font-size:15px;font-weight:700;color:var(--navy);}
-.card-sub-text{font-size:12px;color:var(--gray500);margin-top:2px;}
-
-.crud-tabs{display:flex;gap:4px;padding:16px 24px 0;border-bottom:1px solid var(--gray100);}
-.crud-tab{padding:9px 20px;border-radius:8px 8px 0 0;cursor:pointer;
-  font-size:14px;font-weight:500;color:var(--gray500);
-  border:1px solid transparent;border-bottom:none;
-  transition:all .2s;position:relative;bottom:-1px;}
-.crud-tab:hover{color:var(--text);}
-.crud-tab.active{color:var(--navy);background:var(--white);border-color:var(--gray100);font-weight:700;}
-.crud-pane{display:none;padding:24px;}
-.crud-pane.active{display:block;}
-
-.pred-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
-.pred-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;
-  border-radius:var(--radius);background:var(--gray50);border:1px solid var(--gray100);
-  transition:border-color .2s;}
-.pred-item:hover{border-color:var(--gray300);}
-.pred-num{font-size:12px;font-weight:700;color:var(--gray300);min-width:20px;padding-top:2px;}
-.pred-item-main{flex:1;min-width:0;}
-.pred-item-name{font-size:14px;color:var(--text);font-weight:500;}
-.pred-item-desc{font-size:12px;color:var(--gray500);margin-top:4px;line-height:1.45;}
-.pred-item-desc.empty{font-style:italic;color:var(--gray300);}
-.pred-item-actions{display:flex;gap:6px;flex-shrink:0;}
-.pred-edit-fields{display:none;flex:1;flex-direction:column;gap:8px;}
-.pred-edit-fields input,.pred-edit-fields textarea{width:100%;padding:8px 12px;border:1.5px solid var(--blue1);
-  border-radius:8px;font-family:'Roboto',sans-serif;font-size:14px;color:var(--text);
-  background:var(--white);outline:none;}
-.pred-edit-fields textarea{min-height:72px;resize:vertical;font-size:13px;line-height:1.45;}
-.pred-edit-label{font-size:11px;font-weight:700;color:var(--gray500);text-transform:uppercase;letter-spacing:.5px;}
-.btn-icon{width:32px;height:32px;border-radius:8px;border:1px solid var(--gray200);
-  background:var(--white);cursor:pointer;display:flex;align-items:center;
-  justify-content:center;font-size:14px;transition:all .2s;}
-.btn-icon:hover{border-color:var(--blue1);background:#eef3ff;}
-.btn-icon.del:hover{border-color:#ef4444;background:#fff1f0;}
-.pred-item.editing .pred-item-main{display:none;}
-.pred-item.editing .pred-edit-fields{display:flex;}
-.btn-save-edit{padding:7px 16px;border-radius:8px;border:none;background:var(--blue1);
-  color:#fff;font-family:'Roboto',sans-serif;font-size:13px;font-weight:600;
-  cursor:pointer;display:none;white-space:nowrap;align-self:flex-start;}
-.pred-item.editing .btn-save-edit{display:inline-block;}
-.pred-item.editing .btn-icon.edit{display:none;}
-
-.pred-add-form{padding:18px;background:var(--gray50);border-radius:var(--radius);
-  border:1.5px dashed var(--gray300);}
-.pred-add-label{font-size:12px;font-weight:700;color:var(--gray500);
-  margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px;}
-.pred-add-fields{display:flex;flex-direction:column;gap:10px;}
-.pred-add-row{display:flex;gap:10px;}
-.pred-add-row input,.pred-add-fields textarea{padding:11px 14px;border:1.5px solid var(--gray200);
-  border-radius:var(--radius);font-family:'Roboto',sans-serif;font-size:14px;
-  color:var(--text);background:var(--white);outline:none;transition:border-color .2s;}
-.pred-add-row input{flex:1;}
-.pred-add-fields textarea{min-height:72px;resize:vertical;font-size:13px;line-height:1.45;}
-.pred-add-row input:focus,.pred-add-fields textarea:focus{border-color:var(--blue1);box-shadow:0 0 0 3px rgba(0,74,173,.07);}
-.btn-add-pred{padding:11px 20px;border-radius:var(--radius);border:none;
-  background:linear-gradient(135deg,var(--blue1),var(--blue2));color:#fff;
-  font-family:'Roboto',sans-serif;font-size:14px;font-weight:600;
-  cursor:pointer;transition:all .2s;white-space:nowrap;
-  box-shadow:0 3px 10px rgba(0,65,255,.2);}
-.btn-add-pred:hover{box-shadow:0 5px 16px rgba(0,65,255,.3);transform:translateY(-1px);}
-
-.empty-state{text-align:center;padding:36px;color:var(--gray500);}
-.empty-icon{font-size:32px;margin-bottom:10px;}
-.empty-text{font-size:14px;}
-
-.toast{position:fixed;bottom:28px;right:28px;z-index:9999;
-  padding:12px 20px;border-radius:var(--radius);font-size:13px;font-weight:500;
-  box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px;
-  transform:translateY(80px);opacity:0;transition:all .3s;color:#fff;}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.success{background:#16a34a;}
-.toast.error{background:#dc2626;}
-.toast.info{background:var(--navy);}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(29,22,86,.35);
-  display:none;align-items:center;justify-content:center;z-index:500;}
-.modal-overlay.show{display:flex;}
-.modal{background:var(--white);border-radius:var(--radius-lg);
-  padding:28px 32px;width:380px;box-shadow:var(--shadow-md);}
-.modal-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px;}
-.modal-body{font-size:14px;color:var(--gray700);margin-bottom:24px;line-height:1.5;}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
-.btn-cancel{padding:9px 20px;border-radius:var(--radius);border:1px solid var(--gray200);
-  background:var(--white);color:var(--gray700);font-family:'Roboto',sans-serif;
-  font-size:13px;font-weight:500;cursor:pointer;}
-.btn-cancel:hover{border-color:var(--gray500);}
-.btn-confirm{padding:9px 20px;border-radius:var(--radius);border:none;
-  background:#dc2626;color:#fff;font-family:'Roboto',sans-serif;
-  font-size:13px;font-weight:600;cursor:pointer;}
-.btn-confirm:hover{background:#b91c1c;}
-
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-thumb{background:var(--gray200);border-radius:3px;}
-</style>
+<script>
+window.ZK_PAGE = { activePage: 'tareas_pred', pageTitle: 'Tareas Predeterminadas', pageSubtitle: 'Catálogo de tareas anuales y mensuales.' };
+</script>
 </head>
-<body>
+<body class="zk-app zk-tareas">
 
-<div class="topbar">
-  <div class="topbar-left">
-    <span class="topbar-logo">Conta<span>Flow</span></span>
-    <span class="topbar-sep"></span>
-    <span class="topbar-page">Tareas Predeterminadas</span>
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="dashboard.html" class="sidebar-brand-link">
+      <img src="zidkenulogohorizontal.png" alt="Zidkenu Soluciones Empresariales" class="sidebar-logo-img">
+    </a>
   </div>
-  <div class="topbar-right">
-    <div class="user-chip">
-      <span class="user-dot" id="user-dot"></span>
-      <span id="user-name">—</span>
+  <div class="sidebar-user-info">
+    <div class="user-avatar" id="sidebarAvatar">—</div>
+    <div class="user-name-side" id="sidebarName">—</div>
+    <span class="role-badge" id="sidebarRoleBadge">—</span>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+  <div class="sidebar-footer">
+    <button type="button" class="logout-btn" onclick="ZK.logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      Cerrar sesión
+    </button>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="app-topbar">
+    <div class="topbar-left">
+      <h1 id="zkPageTitle">Tareas Predeterminadas</h1>
+      <p id="zkPageSubtitle">Catálogo de tareas anuales y mensuales.</p>
     </div>
-    <a class="btn-nav" href="asignar_tareas.html">← Volver a Asignar</a>
-    <button class="btn-logout" onclick="logout()">Salir</button>
+    <div class="topbar-right">
+      <div class="zk-topbar-actions" id="zkTopbarExtra"><a class="zk-btn-nav" href="asignar_tareas.html">← Volver a Asignar</a></div>
+      <span class="topbar-date" id="currentDate">—</span>
+    </div>
   </div>
-</div>
-
-<div class="content">
-  <div class="page-header">
+  <div class="page-content zk-page-content">
+<div class="page-header">
     <div class="page-title">Tareas Predeterminadas</div>
     <div class="page-sub">Gestiona el catálogo de tareas anuales y mensuales que se usan al asignar empresas.</div>
   </div>
@@ -218,7 +98,11 @@ body{font-family:'Roboto',sans-serif;background:var(--gray50);color:var(--text);
   </div>
 </div>
 
+  </div>
+</main>
+
 <script src="db.js"></script>
+<script src="zidkenu_shell.js"></script>
 <script>
 let session = null;
 let deletePendingId = null;
@@ -226,10 +110,17 @@ let deletePendingId = null;
 document.addEventListener('DOMContentLoaded', () => {
   session = DB.requireSession(['admin','directivo']);
   if (!session) return;
-  document.getElementById('user-name').textContent = session.nombre;
-  document.getElementById('user-dot').className = 'user-dot dot-' + session.rol;
-  renderLists();
+  const nameEl = document.getElementById('sidebarName');
+  if (nameEl) nameEl.textContent = session.nombre;
+  scheduleRenderLists();
 });
+
+function scheduleRenderLists() {
+  const run = () => renderLists();
+  run();
+  setTimeout(run, 0);
+}
+window.addEventListener('pageshow', () => { if (session) renderLists(); });
 
 function switchTab(tipo, el) {
   document.querySelectorAll('.crud-tab').forEach(t => t.classList.remove('active'));
@@ -256,24 +147,26 @@ function renderLists() {
       const descHtml = desc ? escHtml(desc) : 'Sin descripción';
       item.innerHTML = `
         <span class="pred-num">${i+1}</span>
-        <div class="pred-item-main">
-          <div class="pred-item-name">${escHtml(p.nombre)}</div>
-          <div class="pred-item-desc ${desc ? '' : 'empty'}">${descHtml}</div>
-        </div>
-        <div class="pred-edit-fields">
+        <div class="pred-body">
+          <div class="pred-view">
+            <div class="pred-item-name">${escHtml(p.nombre)}</div>
+            <div class="pred-item-desc ${desc ? '' : 'empty'}">${descHtml}</div>
+          </div>
+          <div class="pred-edit-fields">
           <div>
-            <div class="pred-edit-label">Nombre</div>
+            <label class="pred-edit-label">Nombre</label>
             <input class="pred-edit-name" value="${escHtml(p.nombre)}"/>
           </div>
           <div>
-            <div class="pred-edit-label">Descripción</div>
+            <label class="pred-edit-label">Descripción</label>
             <textarea class="pred-edit-desc" placeholder="Texto que verán en el detalle de la tarea...">${escHtml(desc)}</textarea>
           </div>
+          </div>
         </div>
-        <button class="btn-save-edit" onclick="saveEdit('${p.id}')">Guardar</button>
         <div class="pred-item-actions">
-          <button class="btn-icon edit" onclick="startEdit('${p.id}')" title="Editar">✏️</button>
-          <button class="btn-icon del" onclick="openDel('${p.id}','${escHtml(p.nombre)}')" title="Eliminar">🗑️</button>
+          <button type="button" class="btn-save-edit" onclick="saveEdit('${p.id}')">Guardar</button>
+          <button type="button" class="btn-icon edit" onclick="startEdit('${p.id}')" title="Editar">✏️</button>
+          <button type="button" class="btn-icon del" onclick="openDel('${p.id}','${escHtml(p.nombre)}')" title="Eliminar">🗑️</button>
         </div>`;
       cont.appendChild(item);
     });
@@ -335,5 +228,6 @@ function escHtml(s) {
 }
 function logout() { DB.clearSession(); location.reload(); }
 </script>
+<script src="footer_nav.js"></script>
 </body>
 </html>
