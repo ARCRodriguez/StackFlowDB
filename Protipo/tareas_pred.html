@@ -102,12 +102,14 @@ window.ZK_PAGE = { activePage: 'tareas_pred', pageTitle: 'Tareas Predeterminadas
 </main>
 
 <script src="db.js"></script>
+<script src="tareas_api.js"></script>
 <script src="zidkenu_shell.js"></script>
 <script>
 let session = null;
 let deletePendingId = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await DB.ready;
   session = DB.requireSession(['admin','directivo']);
   if (!session) return;
   const nameEl = document.getElementById('sidebarName');

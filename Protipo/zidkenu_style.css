@@ -2228,13 +2228,12 @@ body.zk-app.zk-tareas .zk-page-content {
 }
 .tcell-icon {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 2px;
   flex-shrink: 0;
-  width: 18px;
-  min-height: 16px;
-  padding-top: 1px;
+  width: 16px;
+  min-height: 14px;
+  padding-top: 2px;
 }
 .tcell-body {
   display: flex;

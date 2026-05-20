@@ -318,29 +318,28 @@ const DB = {
     return d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   },
 
-  /** HTML de celda de tarea — icono izquierda + fechas (sin línea divisoria). */
+  /** HTML de celda de tarea — estado arriba; observación o completado abajo (filas separadas). */
   buildTaskCellHtml(tarea) {
     const ev = this.getEstadoVisual(tarea);
     const circulo = this.estadoCirculo(ev);
-    let alertHtml = '';
-    if (tarea.estado !== 'completado') {
-      if (tarea.prioridad_observacion === 'alta') {
-        alertHtml = '<img src="advertencia_alta.png" class="tcell-alert" alt="obs importante"/>';
-      } else if (tarea.prioridad_observacion === 'media') {
-        alertHtml = '<img src="advertencia_media.png" class="tcell-alert" alt="obs media"/>';
-      }
-    }
-
     const tieneCompletada = tarea.estado === 'completado' && tarea.fecha_completado;
     const fechaCompClass = tieneCompletada ? ' completada-date' : ' pendiente-date';
     const fechaCompVal = tieneCompletada ? this.fmtFecha(tarea.fecha_completado) : '—';
-    const bottomIcon = tieneCompletada
-      ? '<span class="tcell-circle completado tcell-circle-sm"></span>'
-      : '<span class="tcell-circle-placeholder" aria-hidden="true"></span>';
+
+    const topIcon = `<span class="tcell-circle ${circulo} tcell-circle-sm"></span>`;
+
+    let bottomIcon = '<span class="tcell-circle-placeholder" aria-hidden="true"></span>';
+    if (tieneCompletada) {
+      bottomIcon = '<span class="tcell-circle completado tcell-circle-sm"></span>';
+    } else if (tarea.prioridad_observacion === 'alta') {
+      bottomIcon = '<img src="advertencia_alta.png" class="tcell-alert" alt="obs importante"/>';
+    } else if (tarea.prioridad_observacion === 'media') {
+      bottomIcon = '<img src="advertencia_media.png" class="tcell-alert" alt="obs media"/>';
+    }
 
     return `<div class="tcell">
       <div class="tcell-row">
-        <div class="tcell-icon">${alertHtml}<span class="tcell-circle ${circulo} tcell-circle-sm"></span></div>
+        <div class="tcell-icon">${topIcon}</div>
         <div class="tcell-body">
           <span class="tcell-label">Fecha límite:</span>
           <span class="tcell-date">${this.fmtFecha(tarea.fecha_limite)}</span>

@@ -177,13 +177,15 @@ window.ZK_PAGE = { activePage: 'asignar_tareas', pageTitle: 'Asignar Tareas', pa
 </main>
 
 <script src="db.js"></script>
+<script src="tareas_api.js"></script>
 <script src="zidkenu_shell.js"></script>
   <script>
     let session = null;
     let bloques = { anual: false, mensual: false, general: false };
     let selAnual = [], selMensual = [], pendingGenerales = [];
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      await DB.ready;
       session = DB.requireSession(['admin', 'directivo']);
       if (!session) return;
       const nameEl = document.getElementById('sidebarName');
