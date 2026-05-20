@@ -55,6 +55,7 @@ window.ZK_PAGE = { activePage: 'detalle_tarea', pageTitle: 'Detalle de Tarea', p
 </main>
 
 <script src="db.js"></script>
+<script src="tareas_api.js"></script>
 <script src="zidkenu_shell.js"></script>
 <script>
 const VISTA_POR_ROL = {
@@ -272,8 +273,9 @@ function rechazarTarea(prioridad) {
 }
 function logout() { DB.clearSession(); location.reload(); }
 
-document.addEventListener('DOMContentLoaded', () => {
-  session = DB.requireSession(['admin', 'directivo', 'supervisor']);
+document.addEventListener('DOMContentLoaded', async () => {
+  await DB.ready;
+  session = DB.requireSession(['admin', 'directivo', 'supervisor', 'contador']);
   if (!session) return;
   if (!tareaId) {
     window.location.href = vistaVolver(session?.rol || 'supervisor');
