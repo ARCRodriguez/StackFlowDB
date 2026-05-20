@@ -40,13 +40,32 @@ function zkDel(key) {
   try { localStorage.removeItem(key); } catch {}
 }
 
-// Verificar sesión (en archivo local entra directo sin login)
+// Verificar sesión — compatible con ambos sistemas de autenticación:
+// 1. Dashboard nuevo: sessionStorage['zidkenu_user'] (formato {id, nombre, correo, rol})
+// 2. Sistema legacy:  localStorage['zk_user']        (formato {email, nombre, rol})
 function checkSession() {
-  let user = JSON.parse(zkGet('zk_user') || 'null');
+  // Primero intentar sesión del dashboard (sessionStorage)
+  let user = null;
+  try {
+    const raw = sessionStorage.getItem('zidkenu_user');
+    if (raw) {
+      const u = JSON.parse(raw);
+      // Normalizar al formato esperado por renderTopbar ({nombre, rol})
+      user = { nombre: u.nombre, rol: u.rol, email: u.correo || u.email || '' };
+    }
+  } catch {}
+
+  // Si no hay sesión del dashboard, intentar sesión legacy (localStorage)
+  if (!user) {
+    user = JSON.parse(zkGet('zk_user') || 'null');
+  }
+
+  // Fallback para desarrollo local (file://)
   if (!user && location.protocol === 'file:') {
     user = DEMO_USER;
     zkSet('zk_user', JSON.stringify(user));
   }
+
   if (!user) { window.location.href = 'login.html'; return null; }
   return user;
 }
